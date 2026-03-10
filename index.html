@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 加入 viewport-fit=cover 以适配刘海屏和全面屏 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>地理课堂互动小游戏集合</title>
     <!-- 引入 Tailwind CSS 进行快速样式开发 -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,17 +13,35 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8fafc;
+            /* 防止移动端下拉刷新/橡皮筋效果带来的卡顿感 */
+            overscroll-behavior-y: none;
         }
 
         /* 卡片悬浮动画效果 */
         .game-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            /* 移动端移除 hover 避免点击闪烁，只在 PC 启用 hover */
         }
 
+        @media (hover: hover) {
             .game-card:hover {
                 transform: translateY(-8px);
                 box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             }
+        }
+
+        .game-card:active {
+            transform: scale(0.98);
+        }
+
+        /* 移动端安全区域适配 */
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+
+        .pt-safe {
+            padding-top: env(safe-area-inset-top, 20px);
+        }
 
         /* 返回大厅按钮 */
         .back-btn {
@@ -30,47 +49,50 @@
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
+            /* 适配刘海屏距离顶部的距离 */
+            top: max(env(safe-area-inset-top, 20px), 20px);
         }
 
-            .back-btn:hover {
+            .back-btn:active {
                 background: rgba(15, 23, 42, 0.9);
-                transform: scale(1.05);
+                transform: scale(0.95);
             }
     </style>
 </head>
-<body class="text-slate-800 antialiased h-screen overflow-hidden">
+<!-- 使用 h-[100dvh] 完美解决手机浏览器地址栏收缩导致的高度跳动问题 -->
+<body class="text-slate-800 antialiased h-[100dvh] w-full overflow-hidden">
 
     <!-- 教学大厅主界面 -->
-    <div id="hub-container" class="h-full overflow-y-auto flex flex-col relative z-10">
+    <div id="hub-container" class="h-full overflow-y-auto flex flex-col relative z-10 scroll-smooth">
         <!-- 头部导航 -->
-        <header class="bg-slate-900 text-white shadow-xl relative overflow-hidden">
+        <header class="bg-slate-900 text-white shadow-xl relative overflow-hidden pt-safe">
             <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10 text-center">
-                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 flex items-center justify-center gap-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16 relative z-10 text-center">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4 flex items-center justify-center gap-3">
                     <i class="fas fa-globe-asia text-blue-400"></i>
-                    地理课堂互动小游戏
+                    地理课堂小游戏
                 </h1>
-                <p class="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto">
-                    沉浸式 3D 互动体验，探索地球自转、公转与大气层的奥秘。点击下方卡片即可开启互动教学。
+                <p class="text-sm md:text-xl text-slate-300 max-w-3xl mx-auto px-2">
+                    沉浸式 3D 互动体验，探索地球自转、公转与大气层的奥秘。<br class="hidden md:block">点击下方卡片即可开启互动教学。
                 </p>
             </div>
         </header>
 
         <!-- 游戏卡片网格 -->
-        <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 w-full">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
 
                 <!-- 游戏 1：昼夜交替 -->
                 <div class="game-card bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer flex flex-col h-full border border-slate-100" onclick="openGame(1)">
-                    <div class="h-32 bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white relative overflow-hidden">
+                    <div class="h-28 md:h-32 bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white relative overflow-hidden">
                         <i class="fas fa-moon text-6xl opacity-20 absolute -right-4 -bottom-4"></i>
-                        <i class="fas fa-eclipse text-5xl"></i>
+                        <i class="fas fa-eclipse text-4xl md:text-5xl"></i>
                     </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <span class="text-xs font-bold text-indigo-500 tracking-wider uppercase mb-2">课题一</span>
-                        <h2 class="text-xl font-bold text-slate-800 mb-2">地球自转与昼夜交替</h2>
-                        <p class="text-slate-600 text-sm mb-6 flex-grow">探究地球自转产生的昼夜交替现象。在真实的 3D 地球模型上观察太阳光照与晨昏线的变化。</p>
-                        <button class="w-full py-3 px-4 bg-indigo-50 text-indigo-600 font-semibold rounded-xl hover:bg-indigo-100 transition-colors flex items-center justify-center gap-2">
+                    <div class="p-5 md:p-6 flex flex-col flex-grow">
+                        <span class="text-xs font-bold text-indigo-500 tracking-wider uppercase mb-1 md:mb-2">课题一</span>
+                        <h2 class="text-lg md:text-xl font-bold text-slate-800 mb-2">地球自转与昼夜交替</h2>
+                        <p class="text-slate-600 text-xs md:text-sm mb-4 md:mb-6 flex-grow leading-relaxed">探究地球自转产生的昼夜交替现象。在真实的 3D 地球模型上观察太阳光照与晨昏线的变化。</p>
+                        <button class="w-full py-2.5 md:py-3 px-4 bg-indigo-50 text-indigo-600 font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 text-sm md:text-base">
                             <i class="fas fa-play"></i> 开始体验
                         </button>
                     </div>
@@ -78,15 +100,15 @@
 
                 <!-- 游戏 2：公转与时间 -->
                 <div class="game-card bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer flex flex-col h-full border border-slate-100" onclick="openGame(2)">
-                    <div class="h-32 bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white relative overflow-hidden">
+                    <div class="h-28 md:h-32 bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white relative overflow-hidden">
                         <i class="fas fa-clock text-6xl opacity-20 absolute -right-4 -bottom-4"></i>
-                        <i class="fas fa-route text-5xl"></i>
+                        <i class="fas fa-route text-4xl md:text-5xl"></i>
                     </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <span class="text-xs font-bold text-blue-500 tracking-wider uppercase mb-2">课题二</span>
-                        <h2 class="text-xl font-bold text-slate-800 mb-2">地球公转与时间</h2>
-                        <p class="text-slate-600 text-sm mb-6 flex-grow">观察地球围绕太阳公转的物理过程，通过动态仪表盘直观感受公转一圈与“一年”的时间关系。</p>
-                        <button class="w-full py-3 px-4 bg-blue-50 text-blue-600 font-semibold rounded-xl hover:bg-blue-100 transition-colors flex items-center justify-center gap-2">
+                    <div class="p-5 md:p-6 flex flex-col flex-grow">
+                        <span class="text-xs font-bold text-blue-500 tracking-wider uppercase mb-1 md:mb-2">课题二</span>
+                        <h2 class="text-lg md:text-xl font-bold text-slate-800 mb-2">地球公转与时间</h2>
+                        <p class="text-slate-600 text-xs md:text-sm mb-4 md:mb-6 flex-grow leading-relaxed">观察地球围绕太阳公转的物理过程，通过动态仪表盘直观感受公转一圈与“一年”的时间关系。</p>
+                        <button class="w-full py-2.5 md:py-3 px-4 bg-blue-50 text-blue-600 font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 text-sm md:text-base">
                             <i class="fas fa-play"></i> 开始体验
                         </button>
                     </div>
@@ -94,15 +116,15 @@
 
                 <!-- 游戏 3：公转与四季 -->
                 <div class="game-card bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer flex flex-col h-full border border-slate-100" onclick="openGame(3)">
-                    <div class="h-32 bg-gradient-to-r from-orange-400 to-red-500 flex items-center justify-center text-white relative overflow-hidden">
+                    <div class="h-28 md:h-32 bg-gradient-to-r from-orange-400 to-red-500 flex items-center justify-center text-white relative overflow-hidden">
                         <i class="fas fa-sun text-6xl opacity-20 absolute -right-4 -bottom-4"></i>
-                        <i class="fas fa-leaf text-5xl"></i>
+                        <i class="fas fa-leaf text-4xl md:text-5xl"></i>
                     </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <span class="text-xs font-bold text-orange-500 tracking-wider uppercase mb-2">课题三</span>
-                        <h2 class="text-xl font-bold text-slate-800 mb-2">地球公转与四季变化</h2>
-                        <p class="text-slate-600 text-sm mb-6 flex-grow">探索黄赤交角与四季更替的奥秘。随地球公转轨道，观测太阳直射点的移动与春夏秋冬的流转。</p>
-                        <button class="w-full py-3 px-4 bg-orange-50 text-orange-600 font-semibold rounded-xl hover:bg-orange-100 transition-colors flex items-center justify-center gap-2">
+                    <div class="p-5 md:p-6 flex flex-col flex-grow">
+                        <span class="text-xs font-bold text-orange-500 tracking-wider uppercase mb-1 md:mb-2">课题三</span>
+                        <h2 class="text-lg md:text-xl font-bold text-slate-800 mb-2">地球公转与四季变化</h2>
+                        <p class="text-slate-600 text-xs md:text-sm mb-4 md:mb-6 flex-grow leading-relaxed">探索黄赤交角与四季更替的奥秘。随地球公转轨道，观测太阳直射点的移动与春夏秋冬的流转。</p>
+                        <button class="w-full py-2.5 md:py-3 px-4 bg-orange-50 text-orange-600 font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 text-sm md:text-base">
                             <i class="fas fa-play"></i> 开始体验
                         </button>
                     </div>
@@ -110,15 +132,15 @@
 
                 <!-- 游戏 4：大气层结构 -->
                 <div class="game-card bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer flex flex-col h-full border border-slate-100" onclick="openGame(4)">
-                    <div class="h-32 bg-gradient-to-r from-teal-400 to-emerald-500 flex items-center justify-center text-white relative overflow-hidden">
+                    <div class="h-28 md:h-32 bg-gradient-to-r from-teal-400 to-emerald-500 flex items-center justify-center text-white relative overflow-hidden">
                         <i class="fas fa-layer-group text-6xl opacity-20 absolute -right-4 -bottom-4"></i>
-                        <i class="fas fa-cloud-sun text-5xl"></i>
+                        <i class="fas fa-cloud-sun text-4xl md:text-5xl"></i>
                     </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <span class="text-xs font-bold text-teal-500 tracking-wider uppercase mb-2">课题四</span>
-                        <h2 class="text-xl font-bold text-slate-800 mb-2">大气层结构与层级</h2>
-                        <p class="text-slate-600 text-sm mb-6 flex-grow">了解包裹地球的五个大气圈层。通过分离发光的 3D 球体，逐一解析对流层至散逸层的物理特征。</p>
-                        <button class="w-full py-3 px-4 bg-teal-50 text-teal-600 font-semibold rounded-xl hover:bg-teal-100 transition-colors flex items-center justify-center gap-2">
+                    <div class="p-5 md:p-6 flex flex-col flex-grow">
+                        <span class="text-xs font-bold text-teal-500 tracking-wider uppercase mb-1 md:mb-2">课题四</span>
+                        <h2 class="text-lg md:text-xl font-bold text-slate-800 mb-2">大气层结构与层级</h2>
+                        <p class="text-slate-600 text-xs md:text-sm mb-4 md:mb-6 flex-grow leading-relaxed">了解包裹地球的五个大气圈层。通过分离发光的 3D 球体，逐一解析对流层至散逸层的物理特征。</p>
+                        <button class="w-full py-2.5 md:py-3 px-4 bg-teal-50 text-teal-600 font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 text-sm md:text-base">
                             <i class="fas fa-play"></i> 开始体验
                         </button>
                     </div>
@@ -126,15 +148,15 @@
 
                 <!-- 游戏 5：鸟类与对流层 -->
                 <div class="game-card bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer flex flex-col h-full border border-slate-100" onclick="openGame(5)">
-                    <div class="h-32 bg-gradient-to-r from-sky-400 to-blue-500 flex items-center justify-center text-white relative overflow-hidden">
+                    <div class="h-28 md:h-32 bg-gradient-to-r from-sky-400 to-blue-500 flex items-center justify-center text-white relative overflow-hidden">
                         <i class="fas fa-wind text-6xl opacity-20 absolute -right-4 -bottom-4"></i>
-                        <i class="fas fa-dove text-5xl"></i>
+                        <i class="fas fa-dove text-4xl md:text-5xl"></i>
                     </div>
-                    <div class="p-6 flex flex-col flex-grow">
-                        <span class="text-xs font-bold text-sky-500 tracking-wider uppercase mb-2">课题五</span>
-                        <h2 class="text-xl font-bold text-slate-800 mb-2">鸟类与对流层</h2>
-                        <p class="text-slate-600 text-sm mb-6 flex-grow">深入地球的“呼吸区”。在广阔的 3D 云层天空中，与拍打翅膀飞翔的鹳鸟群一起，体验对流层作为生命乐园的魅力。</p>
-                        <button class="w-full py-3 px-4 bg-sky-50 text-sky-600 font-semibold rounded-xl hover:bg-sky-100 transition-colors flex items-center justify-center gap-2">
+                    <div class="p-5 md:p-6 flex flex-col flex-grow">
+                        <span class="text-xs font-bold text-sky-500 tracking-wider uppercase mb-1 md:mb-2">课题五</span>
+                        <h2 class="text-lg md:text-xl font-bold text-slate-800 mb-2">鸟类与对流层</h2>
+                        <p class="text-slate-600 text-xs md:text-sm mb-4 md:mb-6 flex-grow leading-relaxed">深入地球的“呼吸区”。在广阔的 3D 云层天空中，与拍打翅膀飞翔的鸟群一起，体验对流层作为生命乐园的魅力。</p>
+                        <button class="w-full py-2.5 md:py-3 px-4 bg-sky-50 text-sky-600 font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 text-sm md:text-base">
                             <i class="fas fa-play"></i> 开始体验
                         </button>
                     </div>
@@ -143,20 +165,20 @@
             </div>
         </main>
 
-        <!-- 页脚 -->
-        <footer class="bg-slate-50 py-8 text-center text-slate-500 text-sm border-t border-slate-200 mt-auto">
+        <!-- 页脚 (加入 pb-safe 以防小白条遮挡) -->
+        <footer class="bg-slate-50 py-6 md:py-8 text-center text-slate-500 text-xs md:text-sm border-t border-slate-200 mt-auto pb-safe">
             <p><i class="fas fa-graduation-cap mr-1"></i> 地理课堂互动演示大厅 | 专为高效教学设计</p>
         </footer>
     </div>
 
     <!-- 游戏播放器界面 (使用 iframe 隔离运行游戏代码) -->
     <div id="player-container" class="hidden fixed inset-0 z-50 bg-black">
-        <!-- 悬浮返回按钮 -->
-        <button onclick="closeGame()" class="back-btn absolute top-6 left-6 z-[60] text-white px-5 py-2.5 rounded-full font-bold shadow-2xl flex items-center gap-2">
-            <i class="fas fa-arrow-left"></i> 返回大厅
+        <!-- 悬浮返回按钮：已适配屏幕安全边界 -->
+        <button onclick="closeGame()" class="back-btn absolute left-4 md:left-6 z-[60] text-white px-4 py-2 md:px-5 md:py-2.5 rounded-full font-bold shadow-2xl flex items-center gap-2 text-sm md:text-base">
+            <i class="fas fa-arrow-left"></i> <span class="hidden sm:inline">返回大厅</span><span class="sm:hidden">返回</span>
         </button>
         <!-- 游戏沙盒 -->
-        <iframe id="game-iframe" class="w-full h-full border-0"></iframe>
+        <iframe id="game-iframe" class="w-full h-[100dvh] border-0" allow="fullscreen"></iframe>
     </div>
 
     <!-- ========================================== -->
@@ -1208,9 +1230,12 @@
     </div>
     <div id="canvas-container"></div>
     <script type="module">
-        import * as THREE from 'three'; import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'; import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
         const options = document.querySelectorAll('.option-btn'); const feedback = document.getElementById('feedback'); const uiLayer = document.getElementById('ui-layer'); const canvasContainer = document.getElementById('canvas-container'); const infoOverlay = document.getElementById('info-overlay'); const resetBtn = document.getElementById('reset-btn');
         let is3DSceneActive = false;
+
         options.forEach(btn => {
             btn.addEventListener('click', () => {
                 const answer = btn.getAttribute('data-value');
@@ -1233,42 +1258,133 @@
             options.forEach(o => { o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake'); o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500'); o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600'); });
             is3DSceneActive = false;
         });
-        let scene, camera, renderer, controls, clock; let mixers = []; let birds = []; let clouds = [];
+
+        let scene, camera, renderer, controls, clock;
+        let birds = [];
+        let clouds = [];
+
+        // 程序化生成云朵模型 (纯代码生成，0网络请求)
+        function createProceduralCloud() {
+            const cloud = new THREE.Group();
+            const mat = new THREE.MeshLambertMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 });
+            const parts = 3 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < parts; i++) {
+                const size = 10 + Math.random() * 15;
+                const mesh = new THREE.Mesh(new THREE.SphereGeometry(size, 16, 16), mat);
+                mesh.position.set((Math.random() - 0.5) * 30, (Math.random() - 0.5) * 10, (Math.random() - 0.5) * 30);
+                cloud.add(mesh);
+            }
+            return cloud;
+        }
+
+        // 程序化生成极简飞鸟模型 (纯代码拼接，包含扑翼动画结构)
+        function createProceduralBird() {
+            const bird = new THREE.Group();
+            const mat = new THREE.MeshLambertMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+
+            // 鸟身 (使用圆锥形，且尖端指向前方即 -Z 轴)
+            const bodyGeo = new THREE.ConeGeometry(0.8, 4, 4);
+            bodyGeo.rotateX(-Math.PI / 2);
+            const body = new THREE.Mesh(bodyGeo, mat);
+            bird.add(body);
+
+            // 左翼 (-X 方向)
+            const lWingGroup = new THREE.Group();
+            const lWingGeo = new THREE.PlaneGeometry(4, 2);
+            lWingGeo.rotateX(-Math.PI / 2);
+            lWingGeo.translate(-2, 0, 0); // 移动轴心到身体侧边
+            const lWingMesh = new THREE.Mesh(lWingGeo, mat);
+            lWingGroup.add(lWingMesh);
+            bird.add(lWingGroup);
+
+            // 右翼 (+X 方向)
+            const rWingGroup = new THREE.Group();
+            const rWingGeo = new THREE.PlaneGeometry(4, 2);
+            rWingGeo.rotateX(-Math.PI / 2);
+            rWingGeo.translate(2, 0, 0); // 移动轴心到身体侧边
+            const rWingMesh = new THREE.Mesh(rWingGeo, mat);
+            rWingGroup.add(rWingMesh);
+            bird.add(rWingGroup);
+
+            // 尾巴
+            const tailGeo = new THREE.PlaneGeometry(1.5, 2);
+            tailGeo.rotateX(-Math.PI / 2);
+            tailGeo.translate(0, 0, 1);
+            const tailMesh = new THREE.Mesh(tailGeo, mat);
+            tailMesh.position.z = 2; // 放在身体后方
+            bird.add(tailMesh);
+
+            // 缓存翅膀对象和随机飞行动画参数
+            bird.userData = {
+                lWing: lWingGroup,
+                rWing: rWingGroup,
+                flapOffset: Math.random() * Math.PI * 2,
+                flapSpeed: 10 + Math.random() * 5
+            };
+            return bird;
+        }
+
         function init3D() {
             if (scene) return; clock = new THREE.Clock(); scene = new THREE.Scene();
             scene.background = new THREE.Color(0x87CEEB); scene.fog = new THREE.FogExp2(0x87CEEB, 0.0025);
             camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000); camera.position.set(0, 50, 200);
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false }); renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(window.devicePixelRatio); renderer.toneMapping = THREE.ACESFilmicToneMapping; canvasContainer.appendChild(renderer.domElement);
             controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.enablePan = true; controls.maxPolarAngle = Math.PI / 2 + 0.1;
+
             const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1.2); hemiLight.color.setHSL(0.6, 1, 0.6); hemiLight.groundColor.setHSL(0.095, 1, 0.75); hemiLight.position.set(0, 50, 0); scene.add(hemiLight);
             const dirLight = new THREE.DirectionalLight(0xffffff, 2); dirLight.color.setHSL(0.1, 1, 0.95); dirLight.position.set(-1, 1.75, 1); dirLight.position.multiplyScalar(30); scene.add(dirLight);
-            const texLoader = new THREE.TextureLoader();
-            texLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/r160/examples/textures/sprites/cloud.png', (texture) => {
-                const cloudGeo = new THREE.PlaneGeometry(300, 300); const cloudMat = new THREE.MeshLambertMaterial({ map: texture, transparent: true, opacity: 0.55, depthWrite: false, side: THREE.DoubleSide });
-                for (let i = 0; i < 40; i++) { const cloud = new THREE.Mesh(cloudGeo, cloudMat); cloud.position.set(Math.random() * 1200 - 600, Math.random() * 100 - 50, Math.random() * 1200 - 600); cloud.rotation.z = Math.random() * Math.PI * 2; scene.add(cloud); clouds.push(cloud); }
-            });
-            const gltfLoader = new GLTFLoader();
-            gltfLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/r160/examples/models/gltf/Stork.glb', (gltf) => {
-                const flockSize = 18;
-                for (let i = 0; i < flockSize; i++) {
-                    const bird = SkeletonUtils.clone(gltf.scene); bird.scale.set(0.15, 0.15, 0.15);
-                    bird.position.set(Math.random() * 600 - 300, Math.random() * 100 + 20, Math.random() * 600 - 300);
-                    const direction = new THREE.Vector3(Math.random() - 0.5, (Math.random() - 0.5) * 0.2, Math.random() - 0.5).normalize();
-                    const speed = Math.random() * 40 + 40; bird.userData.velocity = direction.multiplyScalar(speed);
-                    const target = bird.position.clone().add(direction); bird.lookAt(target);
-                    scene.add(bird); birds.push(bird);
-                    const mixer = new THREE.AnimationMixer(bird); const action = mixer.clipAction(gltf.animations[0]); action.setDuration(1 + Math.random() * 0.5); action.play(); mixer.setTime(Math.random() * 2); mixers.push(mixer);
-                }
-            });
+
+            // 1. 批量生成动态的程序化云朵
+            for (let i = 0; i < 40; i++) {
+                const cloud = createProceduralCloud();
+                cloud.position.set(Math.random() * 1200 - 600, Math.random() * 100 - 50, Math.random() * 1200 - 600);
+                scene.add(cloud);
+                clouds.push(cloud);
+            }
+
+            // 2. 批量生成极简版飞鸟鸟群
+            const flockSize = 30; // 使用低多边形模型，我们可以渲染更多数量的鸟
+            for (let i = 0; i < flockSize; i++) {
+                const bird = createProceduralBird();
+                bird.scale.set(2.5, 2.5, 2.5); // 放大鸟让屏幕更清晰
+                bird.position.set(Math.random() * 600 - 300, Math.random() * 100 + 20, Math.random() * 600 - 300);
+
+                const direction = new THREE.Vector3(Math.random() - 0.5, (Math.random() - 0.5) * 0.2, Math.random() - 0.5).normalize();
+                const speed = Math.random() * 40 + 40;
+                bird.userData.velocity = direction.multiplyScalar(speed);
+
+                const target = bird.position.clone().add(direction);
+                bird.lookAt(target);
+
+                scene.add(bird);
+                birds.push(bird);
+            }
+
             window.addEventListener('resize', onWindowResize, false); animate();
         }
         function onWindowResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
         function animate() {
-            requestAnimationFrame(animate); if (!is3DSceneActive) return; const delta = clock.getDelta();
-            clouds.forEach(c => { c.lookAt(camera.position); }); mixers.forEach(m => m.update(delta));
+            requestAnimationFrame(animate); if (!is3DSceneActive) return;
+            const delta = clock.getDelta();
+            const time = clock.getElapsedTime();
+
             birds.forEach(bird => {
-                bird.position.addScaledVector(bird.userData.velocity, delta); const bound = 400;
-                if (bird.position.x > bound) bird.position.x = -bound; if (bird.position.x < -bound) bird.position.x = bound; if (bird.position.z > bound) bird.position.z = -bound; if (bird.position.z < -bound) bird.position.z = bound; if (bird.position.y > 150) bird.position.y = 20; if (bird.position.y < 10) bird.position.y = 120;
+                // 手动数学计算模拟扑翼动画 (Sin 波形)
+                const flapAngle = Math.sin(time * bird.userData.flapSpeed + bird.userData.flapOffset) * 0.6;
+                bird.userData.lWing.rotation.z = flapAngle;
+                bird.userData.rWing.rotation.z = -flapAngle;
+
+                // 飞行位移
+                bird.position.addScaledVector(bird.userData.velocity, delta);
+
+                // 空间循环边界
+                const bound = 400;
+                if (bird.position.x > bound) bird.position.x = -bound;
+                if (bird.position.x < -bound) bird.position.x = bound;
+                if (bird.position.z > bound) bird.position.z = -bound;
+                if (bird.position.z < -bound) bird.position.z = bound;
+                if (bird.position.y > 150) bird.position.y = 20;
+                if (bird.position.y < 10) bird.position.y = 120;
             });
             controls.autoRotate = true; controls.autoRotateSpeed = 0.5; controls.update(); renderer.render(scene, camera);
         }
@@ -1278,17 +1394,101 @@
 </html>
     </textarea>
 
-    <!-- 主控脚本：处理场景切换 -->
+    <!-- 主控脚本：处理场景切换及移动端样式补丁注入 -->
     <script>
         const hubContainer = document.getElementById('hub-container');
         const playerContainer = document.getElementById('player-container');
         const gameIframe = document.getElementById('game-iframe');
 
+        // 为各个子游戏定制的【终极版移动端样式与手势补丁】
+        const mobileResponsiveCSS = `
+                <style>
+                    /* 1. 基础物理手势禁用，防止 3D 旋转时页面跟着滑动或触发下拉刷新 */
+                    body, html {
+                        width: 100vw !important;
+                        height: 100dvh !important;
+                        position: fixed !important;
+                        overflow: hidden !important;
+                        touch-action: none !important;
+                        -webkit-user-select: none; /* 禁用文本选择防误触 */
+                        user-select: none;
+                    }
+
+                    /* 2. 确保 Canvas 层全屏且不触发滚动 */
+                    #canvas-container {
+                        width: 100vw !important;
+                        height: 100dvh !important;
+                        touch-action: none !important;
+                    }
+
+                    /* 3. UI 层允许内部自适应滚动 */
+                    #ui-layer {
+                        touch-action: auto !important;
+                    }
+
+                    /* 全局手机端 UI 适配补丁 */
+                    @media (max-width: 768px) {
+                        /* 答题卡缩放与自适应高度适配 */
+                        #quiz-card {
+                            margin: 0 15px !important;
+                            width: calc(100% - 30px) !important;
+                            max-height: 85dvh !important;
+                            overflow-y: auto !important;
+                        }
+                        .p-8 { padding: 1.25rem !important; }
+                        h1.text-2xl { font-size: 1.2rem !important; }
+                        h2.text-xl { font-size: 1.05rem !important; margin-bottom: 0.8rem !important; line-height: 1.5 !important; }
+                        .option-btn { padding: 0.75rem !important; font-size: 0.9rem !important; }
+
+                        /* 底部解说栏极致缩放适配并防挡底部安全区(小黑条) */
+                        #info-overlay {
+                            width: 92% !important;
+                            min-width: 0 !important;
+                            padding: 15px !important;
+                            bottom: max(env(safe-area-inset-bottom, 15px), 15px) !important;
+                            max-height: 45dvh !important;
+                            overflow-y: auto !important;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                        }
+                        #info-overlay h3, #info-title { font-size: 1.1rem !important; margin-bottom: 0.4rem !important; text-align: center; }
+                        #info-overlay p, #info-desc { font-size: 0.85rem !important; margin-bottom: 0.6rem !important; line-height: 1.4 !important; text-align: center; }
+                        #reset-btn { padding: 0.5rem 1.5rem !important; font-size: 0.9rem !important; margin-top: auto !important; width: 80%; }
+
+                        /* 顶部仪表盘/时间指示器适配并防挡刘海和左上角的返回按钮 */
+                        #time-hud, #layer-hud {
+                            width: 92% !important;
+                            padding: 10px 15px !important;
+                            /* 下移避开刘海屏和外层的返回大厅按钮 (top: ~65px) */
+                            top: max(env(safe-area-inset-top, 65px), 65px) !important;
+                        }
+                        #month-display, #season-display { font-size: 1.15rem !important; }
+                        .layer-tab { padding: 5px 10px !important; font-size: 0.75rem !important; margin-bottom: 4px !important; }
+
+                        /* 修正额外大字体的溢出遮挡 */
+                        .text-sm { font-size: 0.75rem !important; }
+                        .text-lg { font-size: 0.85rem !important; }
+                        .disclaimer { font-size: 0.6rem !important; line-height: 1.3 !important; margin-top: 8px !important;}
+                    }
+                </style>
+            `;
+
         function openGame(index) {
             // 获取隐藏的原始代码
-            const rawHTML = document.getElementById(`code-${index}`).value;
+            let rawHTML = document.getElementById(`code-${index}`).value;
 
-            // 将代码注入到沙盒 iframe 中，完全独立运行
+            // 核心补丁 1：强制重写 Viewport meta 标签，禁止移动端双击缩放、双指缩放，并适配刘海屏
+            rawHTML = rawHTML.replace(
+                /<meta name="viewport"[^>]*>/i,
+                '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">'
+            );
+
+            // 核心补丁 2：动态将移动端 CSS 补丁注入到加载的游戏源码 <head> 闭合之前
+            // 从而确保在不改动子游戏文件的情况下面向所有手机端用户提供完美的 UI 和手势体验
+            rawHTML = rawHTML.replace('</head>', mobileResponsiveCSS + '</head>');
+
+            // 将强化后的代码注入到沙盒 iframe 中，完全独立运行
             gameIframe.srcdoc = rawHTML;
 
             // 切换界面：隐藏大厅，显示游戏播放器
