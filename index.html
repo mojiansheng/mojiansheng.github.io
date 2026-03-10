@@ -1,18 +1,182 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>地理课堂互动：地球自转与昼夜交替</title>
+    <title>地理课堂互动小游戏集合</title>
     <!-- 引入 Tailwind CSS 进行快速样式开发 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入 FontAwesome 图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* 卡片悬浮动画效果 */
+        .game-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .game-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+
+        /* 返回大厅按钮 */
+        .back-btn {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+            .back-btn:hover {
+                background: rgba(15, 23, 42, 0.9);
+                transform: scale(1.05);
+            }
+    </style>
+</head>
+<body class="text-slate-800 antialiased h-screen overflow-hidden">
+
+    <!-- 教学大厅主界面 -->
+    <div id="hub-container" class="h-full overflow-y-auto flex flex-col relative z-10">
+        <!-- 头部导航 -->
+        <header class="bg-slate-900 text-white shadow-xl relative overflow-hidden">
+            <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10 text-center">
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 flex items-center justify-center gap-4">
+                    <i class="fas fa-globe-asia text-blue-400"></i>
+                    地理课堂互动小游戏
+                </h1>
+                <p class="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto">
+                    沉浸式 3D 互动体验，探索地球自转、公转与大气层的奥秘。点击下方卡片即可开启互动教学。
+                </p>
+            </div>
+        </header>
+
+        <!-- 游戏卡片网格 -->
+        <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- 游戏 1：昼夜交替 -->
+                <div class="game-card bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer flex flex-col h-full border border-slate-100" onclick="openGame(1)">
+                    <div class="h-32 bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center text-white relative overflow-hidden">
+                        <i class="fas fa-moon text-6xl opacity-20 absolute -right-4 -bottom-4"></i>
+                        <i class="fas fa-eclipse text-5xl"></i>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <span class="text-xs font-bold text-indigo-500 tracking-wider uppercase mb-2">课题一</span>
+                        <h2 class="text-xl font-bold text-slate-800 mb-2">地球自转与昼夜交替</h2>
+                        <p class="text-slate-600 text-sm mb-6 flex-grow">探究地球自转产生的昼夜交替现象。在真实的 3D 地球模型上观察太阳光照与晨昏线的变化。</p>
+                        <button class="w-full py-3 px-4 bg-indigo-50 text-indigo-600 font-semibold rounded-xl hover:bg-indigo-100 transition-colors flex items-center justify-center gap-2">
+                            <i class="fas fa-play"></i> 开始体验
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 游戏 2：公转与时间 -->
+                <div class="game-card bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer flex flex-col h-full border border-slate-100" onclick="openGame(2)">
+                    <div class="h-32 bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center text-white relative overflow-hidden">
+                        <i class="fas fa-clock text-6xl opacity-20 absolute -right-4 -bottom-4"></i>
+                        <i class="fas fa-route text-5xl"></i>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <span class="text-xs font-bold text-blue-500 tracking-wider uppercase mb-2">课题二</span>
+                        <h2 class="text-xl font-bold text-slate-800 mb-2">地球公转与时间</h2>
+                        <p class="text-slate-600 text-sm mb-6 flex-grow">观察地球围绕太阳公转的物理过程，通过动态仪表盘直观感受公转一圈与“一年”的时间关系。</p>
+                        <button class="w-full py-3 px-4 bg-blue-50 text-blue-600 font-semibold rounded-xl hover:bg-blue-100 transition-colors flex items-center justify-center gap-2">
+                            <i class="fas fa-play"></i> 开始体验
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 游戏 3：公转与四季 -->
+                <div class="game-card bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer flex flex-col h-full border border-slate-100" onclick="openGame(3)">
+                    <div class="h-32 bg-gradient-to-r from-orange-400 to-red-500 flex items-center justify-center text-white relative overflow-hidden">
+                        <i class="fas fa-sun text-6xl opacity-20 absolute -right-4 -bottom-4"></i>
+                        <i class="fas fa-leaf text-5xl"></i>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <span class="text-xs font-bold text-orange-500 tracking-wider uppercase mb-2">课题三</span>
+                        <h2 class="text-xl font-bold text-slate-800 mb-2">地球公转与四季变化</h2>
+                        <p class="text-slate-600 text-sm mb-6 flex-grow">探索黄赤交角与四季更替的奥秘。随地球公转轨道，观测太阳直射点的移动与春夏秋冬的流转。</p>
+                        <button class="w-full py-3 px-4 bg-orange-50 text-orange-600 font-semibold rounded-xl hover:bg-orange-100 transition-colors flex items-center justify-center gap-2">
+                            <i class="fas fa-play"></i> 开始体验
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 游戏 4：大气层结构 -->
+                <div class="game-card bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer flex flex-col h-full border border-slate-100" onclick="openGame(4)">
+                    <div class="h-32 bg-gradient-to-r from-teal-400 to-emerald-500 flex items-center justify-center text-white relative overflow-hidden">
+                        <i class="fas fa-layer-group text-6xl opacity-20 absolute -right-4 -bottom-4"></i>
+                        <i class="fas fa-cloud-sun text-5xl"></i>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <span class="text-xs font-bold text-teal-500 tracking-wider uppercase mb-2">课题四</span>
+                        <h2 class="text-xl font-bold text-slate-800 mb-2">大气层结构与层级</h2>
+                        <p class="text-slate-600 text-sm mb-6 flex-grow">了解包裹地球的五个大气圈层。通过分离发光的 3D 球体，逐一解析对流层至散逸层的物理特征。</p>
+                        <button class="w-full py-3 px-4 bg-teal-50 text-teal-600 font-semibold rounded-xl hover:bg-teal-100 transition-colors flex items-center justify-center gap-2">
+                            <i class="fas fa-play"></i> 开始体验
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 游戏 5：鸟类与对流层 -->
+                <div class="game-card bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer flex flex-col h-full border border-slate-100" onclick="openGame(5)">
+                    <div class="h-32 bg-gradient-to-r from-sky-400 to-blue-500 flex items-center justify-center text-white relative overflow-hidden">
+                        <i class="fas fa-wind text-6xl opacity-20 absolute -right-4 -bottom-4"></i>
+                        <i class="fas fa-dove text-5xl"></i>
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <span class="text-xs font-bold text-sky-500 tracking-wider uppercase mb-2">课题五</span>
+                        <h2 class="text-xl font-bold text-slate-800 mb-2">鸟类与对流层</h2>
+                        <p class="text-slate-600 text-sm mb-6 flex-grow">深入地球的“呼吸区”。在广阔的 3D 云层天空中，与拍打翅膀飞翔的鹳鸟群一起，体验对流层作为生命乐园的魅力。</p>
+                        <button class="w-full py-3 px-4 bg-sky-50 text-sky-600 font-semibold rounded-xl hover:bg-sky-100 transition-colors flex items-center justify-center gap-2">
+                            <i class="fas fa-play"></i> 开始体验
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="bg-slate-50 py-8 text-center text-slate-500 text-sm border-t border-slate-200 mt-auto">
+            <p><i class="fas fa-graduation-cap mr-1"></i> 地理课堂互动演示大厅 | 专为高效教学设计</p>
+        </footer>
+    </div>
+
+    <!-- 游戏播放器界面 (使用 iframe 隔离运行游戏代码) -->
+    <div id="player-container" class="hidden fixed inset-0 z-50 bg-black">
+        <!-- 悬浮返回按钮 -->
+        <button onclick="closeGame()" class="back-btn absolute top-6 left-6 z-[60] text-white px-5 py-2.5 rounded-full font-bold shadow-2xl flex items-center gap-2">
+            <i class="fas fa-arrow-left"></i> 返回大厅
+        </button>
+        <!-- 游戏沙盒 -->
+        <iframe id="game-iframe" class="w-full h-full border-0"></iframe>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 下方是存储各游戏完整原始代码的隐藏数据区 -->
+    <!-- ========================================== -->
+    <!-- 游戏 1：昼夜交替 原始代码 -->
+    <textarea id="code-1" class="hidden">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地理课堂互动：地球自转与昼夜交替</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
             margin: 0;
             overflow: hidden;
-            background-color: #0f172a; /* 深色背景 */
+            background-color: #0f172a;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
@@ -90,90 +254,40 @@
             transition: opacity 1s ease-in-out;
             transition-delay: 1s;
         }
-    </style>
-
-    <!-- 配置 Three.js 的 Import Map -->
+</style>
     <script type="importmap">
-        {
-            "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-            }
-        }
-    </script>
+        { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+        </script>
 </head>
 <body>
-
-    <!-- UI 层：答题界面 -->
     <div id="ui-layer">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden" id="quiz-card">
-            <!-- 头部 -->
-            <div class="bg-blue-600 text-white p-6 text-center">
-                <h1 class="text-2xl font-bold flex items-center justify-center gap-2">
-                    <i class="fas fa-globe-asia"></i> 趣味地理小测验
-                </h1>
-                <p class="text-blue-100 mt-2">开动脑筋，选择正确的答案吧！</p>
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden" id="quiz-card">
+    <div class="bg-blue-600 text-white p-6 text-center">
+    <h1 class="text-2xl font-bold flex items-center justify-center gap-2"><i class="fas fa-globe-asia"></i> 趣味地理小测验</h1>
+    <p class="text-blue-100 mt-2">开动脑筋，选择正确的答案吧！</p>
             </div>
-
-            <!-- 题目区 -->
-            <div class="p-8">
-                <h2 class="text-xl text-gray-800 font-semibold mb-6 leading-relaxed">
-                    下列现象中，主要由地球<span class="text-blue-600 border-b-2 border-blue-600 mx-1 pb-1">自转</span>产生的是（&nbsp;&nbsp;&nbsp;&nbsp;）
-                </h2>
-
-                <!-- 选项列表 -->
-                <div class="space-y-4" id="options-container">
-                    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="A">
-                        <span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">A</span>
-                        四季更替
-                    </button>
-
-                    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="B">
-                        <span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">B</span>
-                        昼夜交替
-                    </button>
-
-                    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="C">
-                        <span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">C</span>
-                        五带划分
-                    </button>
-
-                    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="D">
-                        <span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">D</span>
-                        昼夜长短变化
-                    </button>
+    <div class="p-8">
+    <h2 class="text-xl text-gray-800 font-semibold mb-6 leading-relaxed">下列现象中，主要由地球<span class="text-blue-600 border-b-2 border-blue-600 mx-1 pb-1">自转</span>产生的是（&nbsp;&nbsp;&nbsp;&nbsp;）</h2>
+    <div class="space-y-4" id="options-container">
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="A"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">A</span>四季更替</button>
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="B"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">B</span>昼夜交替</button>
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="C"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">C</span>五带划分</button>
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="D"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">D</span>昼夜长短变化</button>
                 </div>
-
-                <!-- 反馈提示 -->
-                <div id="feedback" class="mt-6 text-center hidden font-bold rounded-lg p-3">
-                    <!-- 动态插入提示信息 -->
-                </div>
+    <div id="feedback" class="mt-6 text-center hidden font-bold rounded-lg p-3"></div>
             </div>
         </div>
     </div>
-
-    <!-- 3D 演示层解说词 -->
     <div id="info-overlay">
-        <h3 class="text-2xl font-bold text-yellow-400 mb-2">回答正确！这就是昼夜交替现象</h3>
-        <p class="text-gray-200 text-lg max-w-3xl">
-            地球是一个不发光且不透明的球体，同一时间太阳只能照亮地球的一半。<br>
-            向着太阳的半球是<span class="text-yellow-300 font-bold">白昼</span>，背着太阳的半球是<span class="text-blue-300 font-bold">黑夜</span>。<br>
-            随着地球不停地自转，昼夜也就不断地交替。
-        </p>
-        <button id="reset-btn" class="mt-4 px-6 py-2 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors border border-white/50">
-            <i class="fas fa-undo mr-2"></i>再玩一次
-        </button>
+    <h3 class="text-2xl font-bold text-yellow-400 mb-2">回答正确！这就是昼夜交替现象</h3>
+    <p class="text-gray-200 text-lg max-w-3xl">地球是一个不发光且不透明的球体，同一时间太阳只能照亮地球的一半。<br>向着太阳的半球是<span class="text-yellow-300 font-bold">白昼</span>，背着太阳的半球是<span class="text-blue-300 font-bold">黑夜</span>。<br>随着地球不停地自转，昼夜也就不断地交替。</p>
+    <button id="reset-btn" class="mt-4 px-6 py-2 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors border border-white/50"><i class="fas fa-undo mr-2"></i>再玩一次</button>
     </div>
-
-    <!-- 3D Canvas 容器 -->
     <div id="canvas-container"></div>
-
-    <!-- 应用逻辑 -->
     <script type="module">
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-        // --- 答题逻辑 ---
         const options = document.querySelectorAll('.option-btn');
         const feedback = document.getElementById('feedback');
         const uiLayer = document.getElementById('ui-layer');
@@ -185,182 +299,1010 @@
         options.forEach(btn => {
             btn.addEventListener('click', () => {
                 const answer = btn.getAttribute('data-value');
-
-                // 重置所有按钮样式
-                options.forEach(o => {
-                    o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake');
-                    o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500');
-                    o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600');
-                });
-
+                options.forEach(o => { o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake'); o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500'); o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600'); });
                 if (answer === 'B') {
-                    // 正确逻辑
-                    btn.classList.add('border-green-500', 'bg-green-50');
-                    btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600');
-                    btn.querySelector('span').classList.add('bg-green-500', 'text-white');
-
-                    feedback.innerHTML = '<i class="fas fa-check-circle mr-2"></i>回答正确！即将进入演示环节...';
-                    feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-green-100 text-green-700 block';
-
-                    setTimeout(() => {
-                        start3DVisualization();
-                    }, 1500);
-
+                    btn.classList.add('border-green-500', 'bg-green-50'); btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600'); btn.querySelector('span').classList.add('bg-green-500', 'text-white');
+                    feedback.innerHTML = '<i class="fas fa-check-circle mr-2"></i>回答正确！即将进入演示环节...'; feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-green-100 text-green-700 block';
+                    setTimeout(() => { start3DVisualization(); }, 1500);
                 } else {
-                    // 错误逻辑
-                    btn.classList.add('border-red-500', 'bg-red-50', 'shake');
-                    btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600');
-                    btn.querySelector('span').classList.add('bg-red-500', 'text-white');
-
-                    const explanations = {
-                        'A': '四季更替主要由地球公转产生哦。',
-                        'C': '五带划分主要由地球公转及黄赤交角产生。',
-                        'D': '昼夜长短变化也是主要由地球公转产生的。'
-                    };
-
-                    feedback.innerHTML = `<i class="fas fa-times-circle mr-2"></i>回答错误。${explanations[answer]} 再想想！`;
-                    feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-red-100 text-red-700 block';
-
-                    setTimeout(() => {
-                        btn.classList.remove('shake');
-                    }, 500);
+                    btn.classList.add('border-red-500', 'bg-red-50', 'shake'); btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600'); btn.querySelector('span').classList.add('bg-red-500', 'text-white');
+                    const explanations = { 'A': '四季更替主要由地球公转产生哦。', 'C': '五带划分主要由地球公转及黄赤交角产生。', 'D': '昼夜长短变化也是主要由地球公转产生的。' };
+                    feedback.innerHTML = `<i class="fas fa-times-circle mr-2"></i>回答错误。${explanations[answer]} 再想想！`; feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-red-100 text-red-700 block';
+                    setTimeout(() => { btn.classList.remove('shake'); }, 500);
                 }
             });
         });
 
         resetBtn.addEventListener('click', () => {
-            // 重置界面
-            canvasContainer.style.opacity = '0';
-            canvasContainer.style.pointerEvents = 'none';
-            infoOverlay.style.opacity = '0';
-            infoOverlay.style.pointerEvents = 'none';
-            uiLayer.style.opacity = '1';
-            uiLayer.style.pointerEvents = 'auto';
-
-            // 重置题目状态
+            canvasContainer.style.opacity = '0'; canvasContainer.style.pointerEvents = 'none'; infoOverlay.style.opacity = '0'; infoOverlay.style.pointerEvents = 'none'; uiLayer.style.opacity = '1'; uiLayer.style.pointerEvents = 'auto';
             feedback.classList.add('hidden');
-            options.forEach(o => {
-                o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake');
-                o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500');
-                o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600');
-            });
-
+            options.forEach(o => { o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake'); o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500'); o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600'); });
             is3DSceneActive = false;
         });
 
-
-        // --- Three.js 3D 演示逻辑 ---
         let scene, camera, renderer, earthGroup, earthMesh, controls;
-
         function init3D() {
             if (scene) return;
-
-            // 1. 创建场景
             scene = new THREE.Scene();
-
-            // 2. 创建相机
-            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 0, 20);
-
-            // 3. 创建渲染器
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.shadowMap.enabled = true;
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); camera.position.set(0, 0, 20);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(window.devicePixelRatio); renderer.shadowMap.enabled = true;
             canvasContainer.appendChild(renderer.domElement);
-
-            // 4. 控制器
-            controls = new OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.enablePan = false;
-
-            // 5. 地球模型
-            earthGroup = new THREE.Group();
-            scene.add(earthGroup);
-
+            controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.enablePan = false;
+            earthGroup = new THREE.Group(); scene.add(earthGroup);
             const textureLoader = new THREE.TextureLoader();
             const earthGeometry = new THREE.SphereGeometry(5, 64, 64);
-            const earthMaterial = new THREE.MeshPhongMaterial({
-                map: textureLoader.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg'),
-                bumpMap: textureLoader.load('https://unpkg.com/three-globe/example/img/earth-topology.png'),
-                bumpScale: 0.1,
-                specular: new THREE.Color('grey'),
-                shininess: 10
-            });
-            earthMesh = new THREE.Mesh(earthGeometry, earthMaterial);
-            earthGroup.rotation.z = 23.5 * Math.PI / 180; // 模拟地轴倾斜
-            earthGroup.add(earthMesh);
-
-            // 大气层
+            const earthMaterial = new THREE.MeshPhongMaterial({ map: textureLoader.load('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg'), bumpMap: textureLoader.load('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png'), bumpScale: 0.1, specular: new THREE.Color('grey'), shininess: 10 });
+            earthMesh = new THREE.Mesh(earthGeometry, earthMaterial); earthGroup.rotation.z = 23.5 * Math.PI / 180; earthGroup.add(earthMesh);
             const atmosphereGeometry = new THREE.SphereGeometry(5.1, 64, 64);
-            const atmosphereMaterial = new THREE.MeshPhongMaterial({
-                color: 0x00aaff,
-                transparent: true,
-                opacity: 0.15,
-                side: THREE.BackSide,
-                blending: THREE.AdditiveBlending
-            });
-            const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
-            earthGroup.add(atmosphere);
-
-            // 6. 灯光 - 昼夜交替的关键
-            const ambientLight = new THREE.AmbientLight(0x404040, 0.5); // 弱光，模拟微弱背景光
-            scene.add(ambientLight);
-
-            const sunLight = new THREE.DirectionalLight(0xffffff, 3);
-            sunLight.position.set(20, 0, 5);
-            scene.add(sunLight);
-
-            // 装饰：太阳发光体
-            const sunGeom = new THREE.SphereGeometry(1, 32, 32);
-            const sunMat = new THREE.MeshBasicMaterial({ color: 0xffdd44 });
-            const sunSphere = new THREE.Mesh(sunGeom, sunMat);
-            sunSphere.position.copy(sunLight.position);
-            scene.add(sunSphere);
-
-            // 星空
-            createStars();
-
-            window.addEventListener('resize', onWindowResize, false);
-            animate();
+            const atmosphereMaterial = new THREE.MeshPhongMaterial({ color: 0x00aaff, transparent: true, opacity: 0.15, side: THREE.BackSide, blending: THREE.AdditiveBlending });
+            const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial); earthGroup.add(atmosphere);
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.5); scene.add(ambientLight);
+            const sunLight = new THREE.DirectionalLight(0xffffff, 3); sunLight.position.set(20, 0, 5); scene.add(sunLight);
+            const sunGeom = new THREE.SphereGeometry(1, 32, 32); const sunMat = new THREE.MeshBasicMaterial({ color: 0xffdd44 }); const sunSphere = new THREE.Mesh(sunGeom, sunMat); sunSphere.position.copy(sunLight.position); scene.add(sunSphere);
+            createStars(); window.addEventListener('resize', onWindowResize, false); animate();
         }
 
         function createStars() {
-            const starGeometry = new THREE.BufferGeometry();
-            const starCount = 1500;
-            const posArray = new Float32Array(starCount * 3);
-            for (let i = 0; i < starCount * 3; i++) {
-                posArray[i] = (Math.random() - 0.5) * 100;
+            const starGeometry = new THREE.BufferGeometry(); const starCount = 1500; const posArray = new Float32Array(starCount * 3);
+            for (let i = 0; i < starCount * 3; i++) { posArray[i] = (Math.random() - 0.5) * 100; }
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3)); const starMaterial = new THREE.PointsMaterial({ size: 0.05, color: 0xffffff }); const stars = new THREE.Points(starGeometry, starMaterial); scene.add(stars);
+        }
+
+        function onWindowResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
+        function animate() { requestAnimationFrame(animate); if (!is3DSceneActive) return; if (earthMesh) earthMesh.rotation.y += 0.005; controls.update(); renderer.render(scene, camera); }
+        function start3DVisualization() { is3DSceneActive = true; init3D(); uiLayer.style.opacity = '0'; uiLayer.style.pointerEvents = 'none'; canvasContainer.style.opacity = '1'; canvasContainer.style.pointerEvents = 'auto'; infoOverlay.style.opacity = '1'; infoOverlay.style.pointerEvents = 'auto'; }
+</script>
+</body>
+</html>
+    </textarea>
+
+    <!-- 游戏 2：公转与时间 原始代码 -->
+    <textarea id="code-2" class="hidden">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地理课堂互动：地球公转与时间</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0f172a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #canvas-container, #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #canvas-container {
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        #ui-layer {
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+
+            .option-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             }
-            starGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            const starMaterial = new THREE.PointsMaterial({ size: 0.05, color: 0xffffff });
-            const stars = new THREE.Points(starGeometry, starMaterial);
-            scene.add(stars);
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
         }
 
-        function onWindowResize() {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
+        @keyframes shake {
+            10%, 90% {
+                transform: translate3d(-1px, 0, 0);
+            }
+
+            20%, 80% {
+                transform: translate3d(2px, 0, 0);
+            }
+
+            30%, 50%, 70% {
+                transform: translate3d(-4px, 0, 0);
+            }
+
+            40%, 60% {
+                transform: translate3d(4px, 0, 0);
+            }
         }
 
+        #time-hud {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 20px;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        #info-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 16px;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 12px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+            border-radius: 10px;
+            transition: width 0.1s linear;
+        }
+
+        .year-complete-animation {
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(16,185,129,0.5);
+                border-color: rgba(16,185,129,0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 30px rgba(16,185,129,0.9);
+                border-color: rgba(16,185,129,1);
+            }
+        }
+</style>
+    <script type="importmap"> { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } } </script>
+</head>
+<body>
+    <div id="ui-layer">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden" id="quiz-card">
+    <div class="bg-blue-600 text-white p-6 text-center">
+    <h1 class="text-2xl font-bold flex items-center justify-center gap-2"><i class="fas fa-clock"></i> 地理时间探索测验</h1>
+    <p class="text-blue-100 mt-2">选出正确答案，开启时光之旅！</p>
+            </div>
+    <div class="p-8">
+    <h2 class="text-xl text-gray-800 font-semibold mb-6 leading-relaxed">地球公转一周所需时间为（&nbsp;&nbsp;&nbsp;&nbsp;）</h2>
+    <div class="space-y-4" id="options-container">
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="A"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">A</span>一年</button>
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="B"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">B</span>一天</button>
+                </div>
+    <div id="feedback" class="mt-6 text-center hidden font-bold rounded-lg p-3"></div>
+            </div>
+        </div>
+    </div>
+    <div id="time-hud">
+    <div class="flex justify-between items-center mb-2"><span class="text-gray-300 text-lg"><i class="fas fa-route"></i> 绕日飞行中...</span><span id="month-display" class="text-3xl font-bold text-yellow-400">1 个月</span></div>
+    <div class="progress-bar-container"><div id="progress-fill"></div></div>
+    <div id="year-complete-msg" class="hidden mt-4 text-2xl font-bold text-green-400"><i class="fas fa-check-circle"></i> 完成一周公转，历时整整一年！</div>
+    </div>
+    <div id="info-overlay">
+    <p class="text-gray-200 text-lg max-w-3xl mb-4">地球不仅围绕地轴自转（导致昼夜交替，用时一天），<br>同时还在太空中沿着椭圆轨道围绕<span class="text-yellow-400 font-bold">太阳公转</span>。<br>绕太阳跑完这漫长的一圈，我们就度过了<span class="text-green-400 font-bold text-xl">一整年 (约365天)</span>。</p>
+    <button id="reset-btn" class="px-8 py-2 bg-blue-600 hover:bg-blue-500 rounded-full text-white transition-colors font-bold shadow-lg"><i class="fas fa-undo mr-2"></i>返回答题</button>
+    </div>
+    <div id="canvas-container"></div>
+    <script type="module">
+        import * as THREE from 'three'; import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        const options = document.querySelectorAll('.option-btn'); const feedback = document.getElementById('feedback'); const uiLayer = document.getElementById('ui-layer'); const canvasContainer = document.getElementById('canvas-container'); const infoOverlay = document.getElementById('info-overlay'); const timeHud = document.getElementById('time-hud'); const resetBtn = document.getElementById('reset-btn'); const monthDisplay = document.getElementById('month-display'); const progressFill = document.getElementById('progress-fill'); const yearCompleteMsg = document.getElementById('year-complete-msg');
+        let is3DSceneActive = false;
+        options.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const answer = btn.getAttribute('data-value');
+                options.forEach(o => { o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake'); o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500'); o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600'); });
+                if (answer === 'A') {
+                    btn.classList.add('border-green-500', 'bg-green-50'); btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600'); btn.querySelector('span').classList.add('bg-green-500', 'text-white');
+                    feedback.innerHTML = '<i class="fas fa-rocket mr-2"></i>回答正确！带你感受时间与空间的旅程...'; feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-green-100 text-green-700 block';
+                    setTimeout(() => { start3DVisualization(); }, 1500);
+                } else {
+                    btn.classList.add('border-red-500', 'bg-red-50', 'shake'); btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600'); btn.querySelector('span').classList.add('bg-red-500', 'text-white');
+                    feedback.innerHTML = `<i class="fas fa-times-circle mr-2"></i>回答错误。一天是地球“自转”一周的时间，再想想！`; feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-red-100 text-red-700 block';
+                    setTimeout(() => { btn.classList.remove('shake'); }, 500);
+                }
+            });
+        });
+        resetBtn.addEventListener('click', () => {
+            canvasContainer.style.opacity = '0'; canvasContainer.style.pointerEvents = 'none'; infoOverlay.style.opacity = '0'; infoOverlay.style.pointerEvents = 'none'; timeHud.style.opacity = '0'; timeHud.style.pointerEvents = 'none'; uiLayer.style.opacity = '1'; uiLayer.style.pointerEvents = 'auto';
+            feedback.classList.add('hidden');
+            options.forEach(o => { o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake'); o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500'); o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600'); });
+            is3DSceneActive = false;
+        });
+        let scene, camera, renderer, controls, earthSystem, earthMesh;
+        let orbitAngle = 0; const orbitRadius = 16; const orbitSpeed = 0.006; let hasCompletedYear = false;
+        function init3D() {
+            if (scene) { resetOrbitState(); return; }
+            scene = new THREE.Scene(); camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); camera.position.set(0, 20, 35);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(window.devicePixelRatio); canvasContainer.appendChild(renderer.domElement);
+            controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.enablePan = false;
+            const sunGeom = new THREE.SphereGeometry(3.5, 32, 32); const sunMat = new THREE.MeshBasicMaterial({ color: 0xffdd44 }); const sunSphere = new THREE.Mesh(sunGeom, sunMat); scene.add(sunSphere);
+            const pointLight = new THREE.PointLight(0xffffff, 800, 0); scene.add(pointLight); const ambientLight = new THREE.AmbientLight(0x404040, 1.5); scene.add(ambientLight);
+            const orbitCurve = new THREE.EllipseCurve(0, 0, orbitRadius, orbitRadius, 0, 2 * Math.PI, false, 0); const orbitPoints = orbitCurve.getPoints(100); const orbitGeom = new THREE.BufferGeometry().setFromPoints(orbitPoints); const orbitMat = new THREE.LineBasicMaterial({ color: 0x55aaff, transparent: true, opacity: 0.3 }); const orbitLine = new THREE.Line(orbitGeom, orbitMat); orbitLine.rotation.x = Math.PI / 2; scene.add(orbitLine);
+            earthSystem = new THREE.Group(); scene.add(earthSystem);
+            const earthTiltGroup = new THREE.Group(); earthTiltGroup.rotation.z = -23.5 * Math.PI / 180; earthSystem.add(earthTiltGroup);
+            const textureLoader = new THREE.TextureLoader(); const earthGeometry = new THREE.SphereGeometry(1.5, 64, 64);
+            const earthMaterial = new THREE.MeshPhongMaterial({ map: textureLoader.load('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg'), bumpMap: textureLoader.load('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png'), bumpScale: 0.08, specular: new THREE.Color('grey'), shininess: 15 });
+            earthMesh = new THREE.Mesh(earthGeometry, earthMaterial); earthTiltGroup.add(earthMesh);
+            createStars(); window.addEventListener('resize', onWindowResize, false); animate();
+        }
+        function createStars() {
+            const starGeometry = new THREE.BufferGeometry(); const starCount = 2000; const posArray = new Float32Array(starCount * 3);
+            for (let i = 0; i < starCount * 3; i++) { posArray[i] = (Math.random() - 0.5) * 150; }
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3)); const starMaterial = new THREE.PointsMaterial({ size: 0.08, color: 0xffffff, transparent: true, opacity: 0.8 }); const stars = new THREE.Points(starGeometry, starMaterial); scene.add(stars);
+        }
+        function onWindowResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
+        function resetOrbitState() { orbitAngle = 0; hasCompletedYear = false; timeHud.classList.remove('year-complete-animation'); yearCompleteMsg.classList.add('hidden'); progressFill.style.width = '0%'; monthDisplay.innerText = '1 个月'; monthDisplay.classList.remove('text-green-400'); monthDisplay.classList.add('text-yellow-400'); }
+        function updateTimeHUD() {
+            const totalRadians = Math.abs(orbitAngle); const oneRevolutionRadians = 2 * Math.PI; let progressRatio = totalRadians / oneRevolutionRadians; if (progressRatio >= 1) progressRatio = 1;
+            progressFill.style.width = (progressRatio * 100) + '%';
+            let currentMonth = Math.floor(progressRatio * 12) + 1; if (currentMonth > 12) currentMonth = 12;
+            if (progressRatio < 1) { monthDisplay.innerText = `${currentMonth} 个月`; }
+            if (progressRatio >= 1 && !hasCompletedYear) { hasCompletedYear = true; monthDisplay.innerText = `12 个月 (一年!)`; monthDisplay.classList.remove('text-yellow-400'); monthDisplay.classList.add('text-green-400'); yearCompleteMsg.classList.remove('hidden'); timeHud.classList.add('year-complete-animation'); }
+        }
+        function animate() { requestAnimationFrame(animate); if (!is3DSceneActive) return; orbitAngle -= orbitSpeed; if (earthSystem) { earthSystem.position.x = orbitRadius * Math.cos(orbitAngle); earthSystem.position.z = orbitRadius * Math.sin(orbitAngle); } if (earthMesh) { earthMesh.rotation.y += 0.05; } updateTimeHUD(); controls.update(); renderer.render(scene, camera); }
+        function start3DVisualization() { is3DSceneActive = true; init3D(); uiLayer.style.opacity = '0'; uiLayer.style.pointerEvents = 'none'; canvasContainer.style.opacity = '1'; canvasContainer.style.pointerEvents = 'auto'; infoOverlay.style.opacity = '1'; infoOverlay.style.pointerEvents = 'auto'; timeHud.style.opacity = '1'; timeHud.style.pointerEvents = 'auto'; }
+</script>
+</body>
+</html>
+    </textarea>
+
+    <!-- 游戏 3：公转与四季 原始代码 -->
+    <textarea id="code-3" class="hidden">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地理课堂互动：地球公转与四季变化</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0f172a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #canvas-container, #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #canvas-container {
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        #ui-layer {
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+
+            .option-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% {
+                transform: translate3d(-1px, 0, 0);
+            }
+
+            20%, 80% {
+                transform: translate3d(2px, 0, 0);
+            }
+
+            30%, 50%, 70% {
+                transform: translate3d(-4px, 0, 0);
+            }
+
+            40%, 60% {
+                transform: translate3d(4px, 0, 0);
+            }
+        }
+
+        #time-hud {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 20px;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        #info-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 16px;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.1s linear, background-color 0.5s ease;
+        }
+</style>
+    <script type="importmap"> { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } } </script>
+</head>
+<body>
+    <div id="ui-layer">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden" id="quiz-card">
+    <div class="bg-blue-600 text-white p-6 text-center">
+    <h1 class="text-2xl font-bold flex items-center justify-center gap-2"><i class="fas fa-globe-asia"></i> 地理四季探索测验</h1>
+    <p class="text-blue-100 mt-2">选出正确答案，开启时光之旅！</p>
+            </div>
+    <div class="p-8">
+    <h2 class="text-xl text-gray-800 font-semibold mb-6 leading-relaxed">下列地理现象，主要由地球<span class="text-blue-600 border-b-2 border-blue-600 mx-1 pb-1">公转</span>引起的是（&nbsp;&nbsp;&nbsp;&nbsp;）</h2>
+    <div class="space-y-4" id="options-container">
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="A"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">A</span>地方时差异</button>
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="B"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">B</span>日月星辰东升西落</button>
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="C"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">C</span>四季的形成</button>
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="D"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">D</span>地转偏向力</button>
+                </div>
+    <div id="feedback" class="mt-6 text-center hidden font-bold rounded-lg p-3"></div>
+            </div>
+        </div>
+    </div>
+    <div id="time-hud">
+    <div class="flex flex-col items-center justify-center">
+    <span class="text-gray-300 text-lg mb-2"><i class="fas fa-sun"></i> 太阳直射点移动规律演示（北半球视角）</span>
+    <span id="season-display" class="text-4xl font-bold text-green-400 transition-colors duration-500">春季</span>
+    <span id="season-desc" class="text-sm text-gray-300 mt-2 h-5 transition-colors duration-500">太阳直射点北移，北半球昼长夜短</span>
+        </div>
+    <div class="progress-bar-container"><div id="progress-fill" class="bg-green-400"></div></div>
+    <div class="w-full flex justify-between mt-2 text-xs text-gray-400 font-bold px-1"><span>春分</span><span>夏至</span><span>秋分</span><span>冬至</span><span>春分</span></div>
+    </div>
+    <div id="info-overlay">
+    <p class="text-gray-200 text-lg max-w-3xl mb-4">地球在自转的同时，还围绕太阳进行<span class="text-yellow-400 font-bold">公转</span>。<br>由于地轴是倾斜的（黄赤交角约23.5°）且方向保持不变，导致太阳直射点在南北回归线之间移动。<br>这就造成了各地在不同时期接收到的太阳热量不同，从而形成了<span class="text-green-400 font-bold text-xl">春、夏、秋、冬</span>四季的更替。</p>
+    <button id="reset-btn" class="px-8 py-2 bg-blue-600 hover:bg-blue-500 rounded-full text-white transition-colors font-bold shadow-lg"><i class="fas fa-undo mr-2"></i>返回答题</button>
+    </div>
+    <div id="canvas-container"></div>
+    <script type="module">
+        import * as THREE from 'three'; import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        const options = document.querySelectorAll('.option-btn'); const feedback = document.getElementById('feedback'); const uiLayer = document.getElementById('ui-layer'); const canvasContainer = document.getElementById('canvas-container'); const infoOverlay = document.getElementById('info-overlay'); const timeHud = document.getElementById('time-hud'); const resetBtn = document.getElementById('reset-btn'); const seasonDisplay = document.getElementById('season-display'); const seasonDesc = document.getElementById('season-desc'); const progressFill = document.getElementById('progress-fill');
+        let is3DSceneActive = false;
+        options.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const answer = btn.getAttribute('data-value');
+                options.forEach(o => { o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake'); o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500'); o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600'); });
+                if (answer === 'C') {
+                    btn.classList.add('border-green-500', 'bg-green-50'); btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600'); btn.querySelector('span').classList.add('bg-green-500', 'text-white');
+                    feedback.innerHTML = '<i class="fas fa-rocket mr-2"></i>回答正确！带你感受四季更替的奥秘...'; feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-green-100 text-green-700 block';
+                    setTimeout(() => { start3DVisualization(); }, 1500);
+                } else {
+                    btn.classList.add('border-red-500', 'bg-red-50', 'shake'); btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600'); btn.querySelector('span').classList.add('bg-red-500', 'text-white');
+                    const explanations = { 'A': '地方时差异主要是由地球自转产生的哦。', 'B': '日月星辰东升西落是地球自转的视觉效果。', 'D': '地转偏向力也是主要由地球自转产生的。' };
+                    feedback.innerHTML = `<i class="fas fa-times-circle mr-2"></i>回答错误。${explanations[answer]} 再想想！`; feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-red-100 text-red-700 block';
+                    setTimeout(() => { btn.classList.remove('shake'); }, 500);
+                }
+            });
+        });
+        resetBtn.addEventListener('click', () => {
+            canvasContainer.style.opacity = '0'; canvasContainer.style.pointerEvents = 'none'; infoOverlay.style.opacity = '0'; infoOverlay.style.pointerEvents = 'none'; timeHud.style.opacity = '0'; timeHud.style.pointerEvents = 'none'; uiLayer.style.opacity = '1'; uiLayer.style.pointerEvents = 'auto';
+            feedback.classList.add('hidden');
+            options.forEach(o => { o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake'); o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500'); o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600'); });
+            is3DSceneActive = false;
+        });
+        let scene, camera, renderer, controls, earthSystem, earthMesh;
+        let orbitAngle = Math.PI / 2; const orbitRadius = 16; const orbitSpeed = 0.005;
+        function init3D() {
+            if (scene) { resetOrbitState(); return; }
+            scene = new THREE.Scene(); camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); camera.position.set(0, 20, 35);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(window.devicePixelRatio); canvasContainer.appendChild(renderer.domElement);
+            controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.enablePan = false;
+            const sunGeom = new THREE.SphereGeometry(3.5, 32, 32); const sunMat = new THREE.MeshBasicMaterial({ color: 0xffdd44 }); const sunSphere = new THREE.Mesh(sunGeom, sunMat); scene.add(sunSphere);
+            const pointLight = new THREE.PointLight(0xffffff, 800, 0); scene.add(pointLight); const ambientLight = new THREE.AmbientLight(0x404040, 1.5); scene.add(ambientLight);
+            const orbitCurve = new THREE.EllipseCurve(0, 0, orbitRadius, orbitRadius, 0, 2 * Math.PI, false, 0); const orbitPoints = orbitCurve.getPoints(100); const orbitGeom = new THREE.BufferGeometry().setFromPoints(orbitPoints); const orbitMat = new THREE.LineBasicMaterial({ color: 0x55aaff, transparent: true, opacity: 0.3 }); const orbitLine = new THREE.Line(orbitGeom, orbitMat); orbitLine.rotation.x = Math.PI / 2; scene.add(orbitLine);
+            earthSystem = new THREE.Group(); scene.add(earthSystem);
+            const earthTiltGroup = new THREE.Group(); earthTiltGroup.rotation.z = -23.5 * Math.PI / 180; earthSystem.add(earthTiltGroup);
+            const textureLoader = new THREE.TextureLoader(); const earthGeometry = new THREE.SphereGeometry(1.5, 64, 64);
+            const earthMaterial = new THREE.MeshPhongMaterial({ map: textureLoader.load('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg'), bumpMap: textureLoader.load('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png'), bumpScale: 0.08, specular: new THREE.Color('grey'), shininess: 15 });
+            earthMesh = new THREE.Mesh(earthGeometry, earthMaterial); earthTiltGroup.add(earthMesh);
+            createStars(); window.addEventListener('resize', onWindowResize, false); animate();
+        }
+        function createStars() {
+            const starGeometry = new THREE.BufferGeometry(); const starCount = 2000; const posArray = new Float32Array(starCount * 3);
+            for (let i = 0; i < starCount * 3; i++) { posArray[i] = (Math.random() - 0.5) * 150; }
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3)); const starMaterial = new THREE.PointsMaterial({ size: 0.08, color: 0xffffff, transparent: true, opacity: 0.8 }); const stars = new THREE.Points(starGeometry, starMaterial); scene.add(stars);
+        }
+        function onWindowResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
+        function resetOrbitState() { orbitAngle = Math.PI / 2; updateSeasonHUD(); }
+        function updateSeasonHUD() {
+            let normalizedAngle = orbitAngle % (2 * Math.PI); if (normalizedAngle < 0) normalizedAngle += 2 * Math.PI;
+            let seasonName = "", colorClass = "", desc = "";
+            if (normalizedAngle >= Math.PI / 2 && normalizedAngle < Math.PI) { seasonName = "春季 🌸"; colorClass = "text-green-400"; desc = "太阳直射点向北移动，北半球春暖花开"; progressFill.style.backgroundColor = "#4ade80"; }
+            else if (normalizedAngle >= Math.PI && normalizedAngle < 3 * Math.PI / 2) { seasonName = "夏季 ☀️"; colorClass = "text-red-400"; desc = "太阳直射北半球，北半球昼长夜短，天气炎热"; progressFill.style.backgroundColor = "#f87171"; }
+            else if (normalizedAngle >= 3 * Math.PI / 2 && normalizedAngle < 2 * Math.PI) { seasonName = "秋季 🍁"; colorClass = "text-yellow-400"; desc = "太阳直射点向南移动，北半球秋高气爽"; progressFill.style.backgroundColor = "#facc15"; }
+            else { seasonName = "冬季 ❄️"; colorClass = "text-blue-400"; desc = "太阳直射南半球，北半球昼短夜长，气候寒冷"; progressFill.style.backgroundColor = "#60a5fa"; }
+            seasonDisplay.innerText = seasonName; seasonDisplay.className = `text-4xl font-bold transition-colors duration-500 ${colorClass}`; seasonDesc.innerText = desc;
+            let progressAngle = normalizedAngle - Math.PI / 2; if (progressAngle < 0) progressAngle += 2 * Math.PI;
+            let progressRatio = progressAngle / (2 * Math.PI); progressFill.style.width = (progressRatio * 100) + '%';
+        }
+        function animate() { requestAnimationFrame(animate); if (!is3DSceneActive) return; orbitAngle += orbitSpeed; if (earthSystem) { earthSystem.position.x = orbitRadius * Math.cos(orbitAngle); earthSystem.position.z = orbitRadius * Math.sin(orbitAngle); } if (earthMesh) { earthMesh.rotation.y += 0.05; } updateSeasonHUD(); controls.update(); renderer.render(scene, camera); }
+        function start3DVisualization() { is3DSceneActive = true; init3D(); uiLayer.style.opacity = '0'; uiLayer.style.pointerEvents = 'none'; canvasContainer.style.opacity = '1'; canvasContainer.style.pointerEvents = 'auto'; infoOverlay.style.opacity = '1'; infoOverlay.style.pointerEvents = 'auto'; timeHud.style.opacity = '1'; timeHud.style.pointerEvents = 'auto'; }
+</script>
+</body>
+</html>
+    </textarea>
+
+    <!-- 游戏 4：大气层结构 原始代码 -->
+    <textarea id="code-4" class="hidden">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地理课堂互动：大气层结构</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050505;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #canvas-container, #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #canvas-container {
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        #ui-layer {
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+
+            .option-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% {
+                transform: translate3d(-1px, 0, 0);
+            }
+
+            20%, 80% {
+                transform: translate3d(2px, 0, 0);
+            }
+
+            30%, 50%, 70% {
+                transform: translate3d(-4px, 0, 0);
+            }
+
+            40%, 60% {
+                transform: translate3d(4px, 0, 0);
+            }
+        }
+
+        #layer-hud {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            display: flex;
+            gap: 10px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s;
+            width: 90%;
+            max-width: 800px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .layer-tab {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #cbd5e1;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+            .layer-tab:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+            }
+
+            .layer-tab.active {
+                background: #3b82f6;
+                border-color: #60a5fa;
+                color: white;
+                box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            }
+
+        #info-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 25px 40px;
+            border-radius: 20px;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s;
+            min-width: 300px;
+            max-width: 700px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .disclaimer {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+</style>
+    <script type="importmap"> { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } } </script>
+</head>
+<body>
+    <div id="ui-layer">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden" id="quiz-card">
+    <div class="bg-blue-600 text-white p-6 text-center">
+    <h1 class="text-2xl font-bold flex items-center justify-center gap-2"><i class="fas fa-cloud-sun"></i> 趣味地理探索测验</h1>
+    <p class="text-blue-100 mt-2">选出正确答案，开启地球护盾的奥秘！</p>
+            </div>
+    <div class="p-8">
+    <h2 class="text-xl text-gray-800 font-semibold mb-6 leading-relaxed">保护地球的<span class="text-blue-600 border-b-2 border-blue-600 mx-1 pb-1">大气层</span>主要分为几个层级？（&nbsp;&nbsp;&nbsp;&nbsp;）</h2>
+    <div class="space-y-4" id="options-container">
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="A"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">A</span>三个</button>
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="B"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">B</span>五个</button>
+                </div>
+    <div id="feedback" class="mt-6 text-center hidden font-bold rounded-lg p-3"></div>
+            </div>
+        </div>
+    </div>
+    <div id="layer-hud">
+    <div class="layer-tab active" data-index="-1"><i class="fas fa-globe"></i> 全景概览</div>
+    <div class="layer-tab" data-index="0">对流层</div>
+    <div class="layer-tab" data-index="1">平流层</div>
+    <div class="layer-tab" data-index="2">中间层</div>
+    <div class="layer-tab" data-index="3">热层</div>
+    <div class="layer-tab" data-index="4">散逸层</div>
+    </div>
+    <div id="info-overlay">
+    <h3 id="info-title" class="text-3xl font-bold text-blue-400 mb-2">大气层的五个层级</h3>
+    <p id="info-alt" class="text-sm font-bold text-yellow-400 mb-3 bg-white/10 inline-block px-3 py-1 rounded-full border border-white/20">高度：0 - 10000+ km</p>
+    <p id="info-desc" class="text-gray-200 text-lg mb-4">地球的大气层是一层包裹着星球的混合气体“护盾”。<br>根据大气的温度、密度等物理性质在垂直方向上的变化，<br>科学家通常将大气层分为五个主要的层级。</p>
+    <div class="flex flex-col items-center gap-2">
+    <button id="reset-btn" class="px-8 py-2 bg-blue-600 hover:bg-blue-500 rounded-full text-white transition-colors font-bold shadow-lg"><i class="fas fa-undo mr-2"></i>返回答题</button>
+    <p class="disclaimer">* 为便于课堂观察演示，3D模型中大气层的厚度比例已做夸张化处理，非真实物理比例。</p>
+        </div>
+    </div>
+    <div id="canvas-container"></div>
+    <script type="module">
+        import * as THREE from 'three'; import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        const options = document.querySelectorAll('.option-btn'); const feedback = document.getElementById('feedback'); const uiLayer = document.getElementById('ui-layer'); const canvasContainer = document.getElementById('canvas-container'); const infoOverlay = document.getElementById('info-overlay'); const layerHud = document.getElementById('layer-hud'); const resetBtn = document.getElementById('reset-btn'); const layerTabs = document.querySelectorAll('.layer-tab'); const infoTitle = document.getElementById('info-title'); const infoAlt = document.getElementById('info-alt'); const infoDesc = document.getElementById('info-desc');
+        let is3DSceneActive = false;
+        const atmosphereData = [
+            { name: '对流层 (Troposphere)', alt: '高度：地表至约 10 - 12 km', color: 0x88ccff, desc: '大气层的最底层，集中了约75%的大气质量和几乎全部的水汽。<br>我们熟知的风、云、雨、雪等<strong class="text-yellow-300">天气现象</strong>几乎全都在这一层发生。' },
+            { name: '平流层 (Stratosphere)', alt: '高度：约 12 - 50 km', color: 0x0088ff, desc: '空气主要做水平运动，气流平稳，非常<strong class="text-yellow-300">适合民航客机飞行</strong>。<br>这一层包含了重要的<strong>臭氧层</strong>，能吸收绝大部分对生物有害的太阳紫外线。' },
+            { name: '中间层 (Mesosphere)', alt: '高度：约 50 - 85 km', color: 0x4400cc, desc: '随着高度增加，温度迅速下降，是地球大气中最冷的地方（可达-90℃）。<br>大部分进入地球的<strong class="text-yellow-300">流星体都在这一层摩擦燃烧</strong>殆尽，保护地表免受撞击。' },
+            { name: '热层 (Thermosphere)', alt: '高度：约 85 - 600 km', color: 0xff00aa, desc: '空气极其稀薄，受太阳辐射影响温度极高。包含电离层，能反射无线电波。<br>绚丽的<strong class="text-yellow-300">极光</strong>在此产生，多数近地轨道卫星和<strong>国际空间站(ISS)</strong>也在这层运行。' },
+            { name: '散逸层 (Exosphere)', alt: '高度：600 km 以上，直至数千公里', color: 0x222255, desc: '地球大气的最外层。这里的大气极其稀薄，甚至接近真空。<br>大气分子受地球引力束缚很小，经常<strong class="text-yellow-300">逃逸散失</strong>到浩瀚的宇宙空间中。' }
+        ];
+        const defaultOverview = { title: '大气层的五个层级', alt: '高度：0 - 10000+ km', desc: '地球的大气层是一层包裹着星球的混合气体“护盾”。<br>根据大气的温度、密度等物理性质在垂直方向上的变化，<br>科学家通常将大气层分为五个主要的层级。' };
+        options.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const answer = btn.getAttribute('data-value');
+                options.forEach(o => { o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake'); o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500'); o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600'); });
+                if (answer === 'B') {
+                    btn.classList.add('border-green-500', 'bg-green-50'); btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600'); btn.querySelector('span').classList.add('bg-green-500', 'text-white');
+                    feedback.innerHTML = '<i class="fas fa-space-shuttle mr-2"></i>回答正确！即将为您解析大气层的五大防御圈...'; feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-green-100 text-green-700 block';
+                    setTimeout(() => { start3DVisualization(); }, 1500);
+                } else {
+                    btn.classList.add('border-red-500', 'bg-red-50', 'shake'); btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600'); btn.querySelector('span').classList.add('bg-red-500', 'text-white');
+                    feedback.innerHTML = `<i class="fas fa-times-circle mr-2"></i>回答错误。地球的大气层可不止三个层级哦，再想想！`; feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-red-100 text-red-700 block';
+                    setTimeout(() => { btn.classList.remove('shake'); }, 500);
+                }
+            });
+        });
+        resetBtn.addEventListener('click', () => {
+            canvasContainer.style.opacity = '0'; canvasContainer.style.pointerEvents = 'none'; infoOverlay.style.opacity = '0'; infoOverlay.style.pointerEvents = 'none'; layerHud.style.opacity = '0'; layerHud.style.pointerEvents = 'none'; uiLayer.style.opacity = '1'; uiLayer.style.pointerEvents = 'auto';
+            feedback.classList.add('hidden');
+            options.forEach(o => { o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake'); o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500'); o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600'); });
+            is3DSceneActive = false;
+        });
+        let scene, camera, renderer, controls, earthGroup, earthMesh; let atmosphereMeshes = [];
+        function init3D() {
+            if (scene) { updateLayerSelection(-1); return; }
+            scene = new THREE.Scene(); camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000); camera.position.set(0, 5, 25);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(window.devicePixelRatio); canvasContainer.appendChild(renderer.domElement);
+            controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.enablePan = false; controls.minDistance = 12; controls.maxDistance = 50;
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 2.5); directionalLight.position.set(10, 5, 10); scene.add(directionalLight);
+            const ambientLight = new THREE.AmbientLight(0x404040, 1.2); scene.add(ambientLight);
+            earthGroup = new THREE.Group(); scene.add(earthGroup);
+            const textureLoader = new THREE.TextureLoader(); const earthGeometry = new THREE.SphereGeometry(5, 64, 64);
+            const earthMaterial = new THREE.MeshPhongMaterial({ map: textureLoader.load('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg'), bumpMap: textureLoader.load('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png'), bumpScale: 0.1, specular: new THREE.Color(0x333333), shininess: 15 });
+            earthMesh = new THREE.Mesh(earthGeometry, earthMaterial); earthMesh.rotation.z = -10 * Math.PI / 180; earthGroup.add(earthMesh);
+            const layerRadii = [5.15, 5.4, 5.8, 6.5, 7.5];
+            for (let i = 0; i < 5; i++) {
+                const geo = new THREE.SphereGeometry(layerRadii[i], 64, 64);
+                const mat = new THREE.MeshLambertMaterial({ color: atmosphereData[i].color, transparent: true, opacity: 0.15, side: THREE.DoubleSide, blending: THREE.AdditiveBlending, depthWrite: false });
+                const mesh = new THREE.Mesh(geo, mat); earthGroup.add(mesh); atmosphereMeshes.push(mesh);
+            }
+            createStars(); window.addEventListener('resize', onWindowResize, false); animate();
+        }
+        function createStars() {
+            const starGeometry = new THREE.BufferGeometry(); const starCount = 2000; const posArray = new Float32Array(starCount * 3);
+            for (let i = 0; i < starCount * 3; i++) { posArray[i] = (Math.random() - 0.5) * 200; }
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3)); const starMaterial = new THREE.PointsMaterial({ size: 0.08, color: 0xffffff, transparent: true, opacity: 0.6 }); const stars = new THREE.Points(starGeometry, starMaterial); scene.add(stars);
+        }
+        function onWindowResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
+        function updateLayerSelection(selectedIndex) {
+            layerTabs.forEach(tab => { const idx = parseInt(tab.getAttribute('data-index')); if (idx === selectedIndex) { tab.classList.add('active'); } else { tab.classList.remove('active'); } });
+            atmosphereMeshes.forEach((mesh, idx) => {
+                if (selectedIndex === -1) { mesh.material.opacity = 0.15; mesh.material.color.setHex(atmosphereData[idx].color); }
+                else if (idx === selectedIndex) { mesh.material.opacity = 0.4; mesh.material.color.setHex(atmosphereData[idx].color); }
+                else { mesh.material.opacity = 0.02; mesh.material.color.setHex(0xaaaaaa); }
+            });
+            if (selectedIndex === -1) { infoTitle.innerText = defaultOverview.title; infoTitle.className = "text-3xl font-bold text-blue-400 mb-2"; infoAlt.innerText = defaultOverview.alt; infoDesc.innerHTML = defaultOverview.desc; }
+            else { const data = atmosphereData[selectedIndex]; infoTitle.innerText = data.name; infoTitle.className = "text-3xl font-bold text-yellow-300 mb-2"; infoAlt.innerText = data.alt; infoDesc.innerHTML = data.desc; }
+        }
+        layerTabs.forEach(tab => { tab.addEventListener('click', (e) => { const index = parseInt(e.target.getAttribute('data-index')); updateLayerSelection(index); }); });
+        function animate() { requestAnimationFrame(animate); if (!is3DSceneActive) return; if (earthGroup) { earthGroup.rotation.y += 0.002; } controls.update(); renderer.render(scene, camera); }
+        function start3DVisualization() { is3DSceneActive = true; init3D(); uiLayer.style.opacity = '0'; uiLayer.style.pointerEvents = 'none'; canvasContainer.style.opacity = '1'; canvasContainer.style.pointerEvents = 'auto'; infoOverlay.style.opacity = '1'; infoOverlay.style.pointerEvents = 'auto'; layerHud.style.opacity = '1'; layerHud.style.pointerEvents = 'auto'; }
+</script>
+</body>
+</html>
+    </textarea>
+
+    <!-- 游戏 5：鸟类与对流层 原始代码 -->
+    <textarea id="code-5" class="hidden">
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地理课堂互动：鸟类与对流层</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #87CEEB;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #canvas-container, #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #canvas-container {
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        #ui-layer {
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #0f172a;
+            transition: opacity 0.5s ease-in-out, background-color 1.5s ease;
+        }
+
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+
+            .option-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            }
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% {
+                transform: translate3d(-1px, 0, 0);
+            }
+
+            20%, 80% {
+                transform: translate3d(2px, 0, 0);
+            }
+
+            30%, 50%, 70% {
+                transform: translate3d(-4px, 0, 0);
+            }
+
+            40%, 60% {
+                transform: translate3d(4px, 0, 0);
+            }
+        }
+
+        #info-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.5);
+            color: #1e293b;
+            padding: 25px 40px;
+            border-radius: 20px;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s;
+            min-width: 300px;
+            max-width: 700px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .disclaimer {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+</style>
+    <script type="importmap"> { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } } </script>
+</head>
+<body>
+    <div id="ui-layer">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden" id="quiz-card">
+    <div class="bg-blue-500 text-white p-6 text-center">
+    <h1 class="text-2xl font-bold flex items-center justify-center gap-2"><i class="fas fa-dove"></i> 趣味地理探索测验</h1>
+    <p class="text-blue-100 mt-2">选出正确答案，开启天空的奥秘！</p>
+            </div>
+    <div class="p-8">
+    <h2 class="text-xl text-gray-800 font-semibold mb-6 leading-relaxed">鸟类通常在大气的<span class="text-blue-500 border-b-2 border-blue-500 mx-1 pb-1">哪个层</span>飞行？（&nbsp;&nbsp;&nbsp;&nbsp;）</h2>
+    <div class="space-y-4" id="options-container">
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="A"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">A</span>对流层</button>
+    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="B"><span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">B</span>平流层</button>
+                </div>
+    <div id="feedback" class="mt-6 text-center hidden font-bold rounded-lg p-3"></div>
+            </div>
+        </div>
+    </div>
+    <div id="info-overlay">
+    <h3 id="info-title" class="text-3xl font-bold text-blue-600 mb-2">对流层：生命的飞行乐园</h3>
+    <p id="info-alt" class="text-sm font-bold text-blue-800 mb-3 bg-blue-100 inline-block px-3 py-1 rounded-full border border-blue-200">高度：地表至约 10 - 12 km</p>
+    <p id="info-desc" class="text-gray-700 text-lg mb-4 font-medium">对流层是大气层的最底层。这里空气密度最大，含有充足的氧气，<br>并且存在着上升和下降的气流（对流运动），<br>这为绝大多数<strong class="text-blue-600">鸟类的呼吸和飞行</strong>提供了必不可少的升力和环境。</p>
+    <div class="flex flex-col items-center gap-2">
+    <button id="reset-btn" class="px-8 py-2 bg-blue-500 hover:bg-blue-600 rounded-full text-white transition-colors font-bold shadow-md"><i class="fas fa-undo mr-2"></i>返回答题</button>
+    <p class="disclaimer">* 注：极少数如斑头雁等鸟类在迁徙时能飞越喜马拉雅山脉，接近平流层底部，但绝大多数飞行仍发生在对流层中。</p>
+        </div>
+    </div>
+    <div id="canvas-container"></div>
+    <script type="module">
+        import * as THREE from 'three'; import { OrbitControls } from 'three/addons/controls/OrbitControls.js'; import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'; import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+        const options = document.querySelectorAll('.option-btn'); const feedback = document.getElementById('feedback'); const uiLayer = document.getElementById('ui-layer'); const canvasContainer = document.getElementById('canvas-container'); const infoOverlay = document.getElementById('info-overlay'); const resetBtn = document.getElementById('reset-btn');
+        let is3DSceneActive = false;
+        options.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const answer = btn.getAttribute('data-value');
+                options.forEach(o => { o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake'); o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500'); o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600'); });
+                if (answer === 'A') {
+                    btn.classList.add('border-green-500', 'bg-green-50'); btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600'); btn.querySelector('span').classList.add('bg-green-500', 'text-white');
+                    feedback.innerHTML = '<i class="fas fa-check-circle mr-2"></i>回答正确！带您进入鸟类翱翔的天空...'; feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-green-100 text-green-700 block';
+                    uiLayer.style.backgroundColor = 'transparent'; setTimeout(() => { start3DVisualization(); }, 1500);
+                } else {
+                    btn.classList.add('border-red-500', 'bg-red-50', 'shake'); btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600'); btn.querySelector('span').classList.add('bg-red-500', 'text-white');
+                    feedback.innerHTML = `<i class="fas fa-times-circle mr-2"></i>回答错误。平流层空气极其稀薄，主要是大型民航客机飞行的区域哦，再想想！`; feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-red-100 text-red-700 block';
+                    setTimeout(() => { btn.classList.remove('shake'); }, 500);
+                }
+            });
+        });
+        resetBtn.addEventListener('click', () => {
+            canvasContainer.style.opacity = '0'; canvasContainer.style.pointerEvents = 'none'; infoOverlay.style.opacity = '0'; infoOverlay.style.pointerEvents = 'none';
+            uiLayer.style.opacity = '1'; uiLayer.style.pointerEvents = 'auto'; uiLayer.style.backgroundColor = '#0f172a';
+            feedback.classList.add('hidden');
+            options.forEach(o => { o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake'); o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500'); o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600'); });
+            is3DSceneActive = false;
+        });
+        let scene, camera, renderer, controls, clock; let mixers = []; let birds = []; let clouds = [];
+        function init3D() {
+            if (scene) return; clock = new THREE.Clock(); scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB); scene.fog = new THREE.FogExp2(0x87CEEB, 0.0025);
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000); camera.position.set(0, 50, 200);
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false }); renderer.setSize(window.innerWidth, window.innerHeight); renderer.setPixelRatio(window.devicePixelRatio); renderer.toneMapping = THREE.ACESFilmicToneMapping; canvasContainer.appendChild(renderer.domElement);
+            controls = new OrbitControls(camera, renderer.domElement); controls.enableDamping = true; controls.enablePan = true; controls.maxPolarAngle = Math.PI / 2 + 0.1;
+            const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1.2); hemiLight.color.setHSL(0.6, 1, 0.6); hemiLight.groundColor.setHSL(0.095, 1, 0.75); hemiLight.position.set(0, 50, 0); scene.add(hemiLight);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 2); dirLight.color.setHSL(0.1, 1, 0.95); dirLight.position.set(-1, 1.75, 1); dirLight.position.multiplyScalar(30); scene.add(dirLight);
+            const texLoader = new THREE.TextureLoader();
+            texLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/r160/examples/textures/sprites/cloud.png', (texture) => {
+                const cloudGeo = new THREE.PlaneGeometry(300, 300); const cloudMat = new THREE.MeshLambertMaterial({ map: texture, transparent: true, opacity: 0.55, depthWrite: false, side: THREE.DoubleSide });
+                for (let i = 0; i < 40; i++) { const cloud = new THREE.Mesh(cloudGeo, cloudMat); cloud.position.set(Math.random() * 1200 - 600, Math.random() * 100 - 50, Math.random() * 1200 - 600); cloud.rotation.z = Math.random() * Math.PI * 2; scene.add(cloud); clouds.push(cloud); }
+            });
+            const gltfLoader = new GLTFLoader();
+            gltfLoader.load('https://raw.githubusercontent.com/mrdoob/three.js/r160/examples/models/gltf/Stork.glb', (gltf) => {
+                const flockSize = 18;
+                for (let i = 0; i < flockSize; i++) {
+                    const bird = SkeletonUtils.clone(gltf.scene); bird.scale.set(0.15, 0.15, 0.15);
+                    bird.position.set(Math.random() * 600 - 300, Math.random() * 100 + 20, Math.random() * 600 - 300);
+                    const direction = new THREE.Vector3(Math.random() - 0.5, (Math.random() - 0.5) * 0.2, Math.random() - 0.5).normalize();
+                    const speed = Math.random() * 40 + 40; bird.userData.velocity = direction.multiplyScalar(speed);
+                    const target = bird.position.clone().add(direction); bird.lookAt(target);
+                    scene.add(bird); birds.push(bird);
+                    const mixer = new THREE.AnimationMixer(bird); const action = mixer.clipAction(gltf.animations[0]); action.setDuration(1 + Math.random() * 0.5); action.play(); mixer.setTime(Math.random() * 2); mixers.push(mixer);
+                }
+            });
+            window.addEventListener('resize', onWindowResize, false); animate();
+        }
+        function onWindowResize() { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }
         function animate() {
-            requestAnimationFrame(animate);
-            if (!is3DSceneActive) return;
-            if (earthMesh) earthMesh.rotation.y += 0.005; // 模拟自转
-            controls.update();
-            renderer.render(scene, camera);
+            requestAnimationFrame(animate); if (!is3DSceneActive) return; const delta = clock.getDelta();
+            clouds.forEach(c => { c.lookAt(camera.position); }); mixers.forEach(m => m.update(delta));
+            birds.forEach(bird => {
+                bird.position.addScaledVector(bird.userData.velocity, delta); const bound = 400;
+                if (bird.position.x > bound) bird.position.x = -bound; if (bird.position.x < -bound) bird.position.x = bound; if (bird.position.z > bound) bird.position.z = -bound; if (bird.position.z < -bound) bird.position.z = bound; if (bird.position.y > 150) bird.position.y = 20; if (bird.position.y < 10) bird.position.y = 120;
+            });
+            controls.autoRotate = true; controls.autoRotateSpeed = 0.5; controls.update(); renderer.render(scene, camera);
+        }
+        function start3DVisualization() { is3DSceneActive = true; init3D(); if (clock) clock.start(); uiLayer.style.opacity = '0'; uiLayer.style.pointerEvents = 'none'; canvasContainer.style.opacity = '1'; canvasContainer.style.pointerEvents = 'auto'; infoOverlay.style.opacity = '1'; infoOverlay.style.pointerEvents = 'auto'; }
+</script>
+</body>
+</html>
+    </textarea>
+
+    <!-- 主控脚本：处理场景切换 -->
+    <script>
+        const hubContainer = document.getElementById('hub-container');
+        const playerContainer = document.getElementById('player-container');
+        const gameIframe = document.getElementById('game-iframe');
+
+        function openGame(index) {
+            // 获取隐藏的原始代码
+            const rawHTML = document.getElementById(`code-${index}`).value;
+
+            // 将代码注入到沙盒 iframe 中，完全独立运行
+            gameIframe.srcdoc = rawHTML;
+
+            // 切换界面：隐藏大厅，显示游戏播放器
+            hubContainer.classList.add('hidden');
+            playerContainer.classList.remove('hidden');
         }
 
-        function start3DVisualization() {
-            is3DSceneActive = true;
-            init3D();
-            uiLayer.style.opacity = '0';
-            uiLayer.style.pointerEvents = 'none';
-            canvasContainer.style.opacity = '1';
-            canvasContainer.style.pointerEvents = 'auto';
-            infoOverlay.style.opacity = '1';
-            infoOverlay.style.pointerEvents = 'auto';
+        function closeGame() {
+            // 清空 iframe 内容，停止 Three.js 渲染和音频，释放内存
+            gameIframe.srcdoc = '';
+
+            // 切换界面：隐藏播放器，显示大厅
+            playerContainer.classList.add('hidden');
+            hubContainer.classList.remove('hidden');
         }
     </script>
 </body>
