@@ -1,291 +1,367 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>探索地理·分组大挑战</title>
-    <!-- 引入 Tailwind CSS -->
+    <title>地理课堂互动：地球自转与昼夜交替</title>
+    <!-- 引入 Tailwind CSS 进行快速样式开发 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 React 和 ReactDOM -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <!-- 引入 Babel 用于解析 JSX -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
-    <!-- 引入 Lucide 图标 -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- 引入 FontAwesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @keyframes shake {
-            0%, 100% {
-                transform: translateX(0);
-            }
-
-            20% {
-                transform: translateX(-10px);
-            }
-
-            40% {
-                transform: translateX(10px);
-            }
-
-            60% {
-                transform: translateX(-10px);
-            }
-
-            80% {
-                transform: translateX(10px);
-            }
-        }
-
-        .animate-shake {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-            border-color: #ef4444 !important;
-            background-color: rgba(239, 68, 68, 0.2) !important;
-        }
-
-        .bg-stars {
-            background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 4px);
-            background-size: 150px 150px;
-            background-position: 0 0, 75px 75px;
-        }
-
         body {
             margin: 0;
             overflow: hidden;
+            background-color: #0f172a; /* 深色背景 */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+
+            .option-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% {
+                transform: translate3d(-1px, 0, 0);
+            }
+
+            20%, 80% {
+                transform: translate3d(2px, 0, 0);
+            }
+
+            30%, 50%, 70% {
+                transform: translate3d(-4px, 0, 0);
+            }
+
+            40%, 60% {
+                transform: translate3d(4px, 0, 0);
+            }
+        }
+
+        #info-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 16px;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease-in-out;
+            transition-delay: 1s;
         }
     </style>
+
+    <!-- 配置 Three.js 的 Import Map -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
 </head>
 <body>
-    <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useCallback } = React;
+    <!-- UI 层：答题界面 -->
+    <div id="ui-layer">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden" id="quiz-card">
+            <!-- 头部 -->
+            <div class="bg-blue-600 text-white p-6 text-center">
+                <h1 class="text-2xl font-bold flex items-center justify-center gap-2">
+                    <i class="fas fa-globe-asia"></i> 趣味地理小测验
+                </h1>
+                <p class="text-blue-100 mt-2">开动脑筋，选择正确的答案吧！</p>
+            </div>
 
-        // --- 游戏数据池 ---
-        const GEOGRAPHY_DATA = [
-            { groupId: 'g1', groupName: '北京景点', items: ['故宫', '天坛', '颐和园'] },
-            { groupId: 'g2', groupName: '陕西景点', items: ['兵马俑', '大雁塔', '华清池'] },
-            { groupId: 'g3', groupName: '法国景点', items: ['埃菲尔铁塔', '卢浮宫', '凡尔赛宫'] },
-            { groupId: 'g4', groupName: '意大利景点', items: ['古罗马斗兽场', '威尼斯水城', '比萨斜塔'] },
-            { groupId: 'g5', groupName: '英国景点', items: ['大本钟', '巨石阵', '白金汉宫'] },
-            { groupId: 'g6', groupName: '美国景点', items: ['自由女神像', '黄石公园', '科罗拉多大峡谷'] },
-            { groupId: 'g7', groupName: '澳大利亚景点', items: ['悉尼歌剧院', '大堡礁', '乌鲁鲁巨石'] },
-            { groupId: 'g8', groupName: '埃及景点', items: ['吉萨金字塔', '狮身人面像', '卡纳克神庙'] },
-            { groupId: 'g9', groupName: '印度景点', items: ['泰姬陵', '恒河', '琥珀堡'] },
-            { groupId: 'g10', groupName: '日本景点', items: ['富士山', '浅草寺', '清水寺'] },
-            { groupId: 'g11', groupName: '俄罗斯景点', items: ['克里姆林宫', '冬宫', '贝加尔湖'] },
-            { groupId: 'g12', groupName: '巴西景点', items: ['基督像', '亚马逊雨林', '伊瓜苏瀑布'] },
-            { groupId: 'g13', groupName: '中国名山', items: ['泰山', '黄山', '华山'] },
-            { groupId: 'g14', groupName: '中国名水', items: ['长江三峡', '桂林山水', '杭州西湖'] },
-            { groupId: 'g15', groupName: '四川景点', items: ['九寨沟', '峨眉山', '都江堰'] },
-            { groupId: 'g16', groupName: '西藏景点', items: ['布达拉宫', '大昭寺', '纳木错'] },
-            { groupId: 'g17', groupName: '湖南景点', items: ['张家界', '凤凰古城', '橘子洲头'] },
-        ];
+            <!-- 题目区 -->
+            <div class="p-8">
+                <h2 class="text-xl text-gray-800 font-semibold mb-6 leading-relaxed">
+                    下列现象中，主要由地球<span class="text-blue-600 border-b-2 border-blue-600 mx-1 pb-1">自转</span>产生的是（&nbsp;&nbsp;&nbsp;&nbsp;）
+                </h2>
 
-        const shuffleArray = (array) => {
-            const newArr = [...array];
-            for (let i = newArr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
-            }
-            return newArr;
-        };
+                <!-- 选项列表 -->
+                <div class="space-y-4" id="options-container">
+                    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="A">
+                        <span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">A</span>
+                        四季更替
+                    </button>
 
-        // 简易图标组件，因为 HTML 环境下直接使用 Lucide React 组件需要更复杂的配置
-        const Icon = ({ name, size = 24, className = "" }) => {
-            useEffect(() => {
-                lucide.createIcons();
-            }, []);
-            return <i data-lucide={name} className={className} style={{ width: size, height: size }}></i>;
-        };
+                    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="B">
+                        <span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">B</span>
+                        昼夜交替
+                    </button>
 
-        function App() {
-            const [gameState, setGameState] = useState('start');
-            const [score, setScore] = useState(0);
-            const [availableItems, setAvailableItems] = useState([]);
-            const [boxes, setBoxes] = useState([
-                { id: 0, groupId: null, groupName: null, items: [] },
-                { id: 1, groupId: null, groupName: null, items: [] },
-                { id: 2, groupId: null, groupName: null, items: [] },
-            ]);
-            const [selectedItemId, setSelectedItemId] = useState(null);
-            const [errorBoxId, setErrorBoxId] = useState(null);
+                    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="C">
+                        <span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">C</span>
+                        五带划分
+                    </button>
 
-            const startNewRound = useCallback(() => {
-                const shuffledGroups = shuffleArray(GEOGRAPHY_DATA).slice(0, 4);
-                let newItems = [];
-                shuffledGroups.forEach(group => {
-                    group.items.forEach(itemName => {
-                        newItems.push({
-                            id: `${group.groupId}-${itemName}-${Math.random()}`,
-                            groupId: group.groupId,
-                            groupName: group.groupName,
-                            name: itemName
-                        });
-                    });
-                });
-                setAvailableItems(shuffleArray(newItems));
-                setBoxes([
-                    { id: 0, groupId: null, groupName: null, items: [] },
-                    { id: 1, groupId: null, groupName: null, items: [] },
-                    { id: 2, groupId: null, groupName: null, items: [] },
-                ]);
-                setTimeout(() => lucide.createIcons(), 100);
-            }, []);
-
-            const startGame = () => {
-                setScore(0);
-                setGameState('playing');
-                startNewRound();
-            };
-
-            useEffect(() => {
-                if (gameState !== 'playing') return;
-                if (score >= 5) {
-                    setTimeout(() => setGameState('won'), 500);
-                    return;
-                }
-                const isRoundComplete = boxes.every(box => box.items.length === 3);
-                if (isRoundComplete && score < 5) {
-                    const timer = setTimeout(() => startNewRound(), 1500);
-                    return () => clearTimeout(timer);
-                }
-            }, [boxes, score, gameState, startNewRound]);
-
-            const handleItemPlacement = (item, targetBoxId) => {
-                let success = false;
-                setBoxes(prevBoxes => {
-                    const newBoxes = [...prevBoxes];
-                    const boxIndex = newBoxes.findIndex(b => b.id === targetBoxId);
-                    const box = newBoxes[boxIndex];
-
-                    if (box.items.length >= 3) return prevBoxes;
-
-                    if (box.items.length === 0) {
-                        newBoxes[boxIndex] = { ...box, groupId: item.groupId, groupName: item.groupName, items: [item] };
-                        setAvailableItems(prev => prev.filter(i => i.id !== item.id));
-                        success = true;
-                        return newBoxes;
-                    }
-
-                    if (box.groupId === item.groupId) {
-                        const updatedItems = [...box.items, item];
-                        newBoxes[boxIndex] = { ...box, items: updatedItems };
-                        setAvailableItems(prev => prev.filter(i => i.id !== item.id));
-                        if (updatedItems.length === 3) setScore(s => s + 1);
-                        success = true;
-                        return newBoxes;
-                    } else {
-                        setErrorBoxId(targetBoxId);
-                        setTimeout(() => setErrorBoxId(null), 600);
-                        return prevBoxes;
-                    }
-                });
-                setSelectedItemId(null);
-            };
-
-            const handleDragStart = (e, item) => {
-                e.dataTransfer.setData('itemId', item.id);
-                setSelectedItemId(item.id);
-            };
-
-            const handleDrop = (e, boxId) => {
-                e.preventDefault();
-                const itemId = e.dataTransfer.getData('itemId');
-                const item = availableItems.find(i => i.id === itemId);
-                if (item) handleItemPlacement(item, boxId);
-            };
-
-            return (
-                <div className="relative w-full h-screen overflow-hidden select-none bg-gradient-to-br from-[#0b1a4a] via-[#103070] to-[#1a4a9c] text-white flex flex-col">
-                    <div className="absolute inset-0 bg-stars opacity-30 pointer-events-none"></div>
-
-                    {gameState === 'start' && (
-                        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm">
-                            <div className="bg-gradient-to-b from-[#103070] to-[#0b1a4a] p-12 rounded-3xl border-4 border-blue-400 shadow-[0_0_60px_rgba(0,180,255,0.6)] text-center max-w-2xl">
-                                <h1 className="text-5xl font-black mb-8 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-500">探索地理·分组大挑战</h1>
-                                <p className="text-lg text-blue-100 mb-12">
-                                    1. 每次右侧给出 12 个地理位置。<br/>
-                                    2. 将同类别的 3 个景点拖入同一个框内。<br/>
-                                    3. 第一个进入的景点决定该框的分类。<br/>
-                                    4. 累计拼出 5 组即可通关！
-                                </p>
-                                <button onClick={startGame} className="flex items-center gap-2 mx-auto px-10 py-4 bg-yellow-400 text-[#0b1a4a] font-bold text-2xl rounded-full shadow-lg hover:scale-105 transition-transform">
-                                    开始挑战
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {gameState !== 'start' && (
-                        <>
-                            <div className="relative z-10 flex items-center justify-between px-6 py-4">
-                                <h1 className="text-2xl font-bold tracking-widest">旅游分类</h1>
-                                <div className="absolute left-1/2 -translate-x-1/2 top-0 bg-[#0a1b4a]/80 px-8 py-3 rounded-b-2xl border border-yellow-500/50 flex flex-col items-center">
-                                    <div className="text-xs text-blue-300">▶ 找出同类景点并组合 (目标: 5组)</div>
-                                    <div className="flex gap-2 mt-1">
-                                        {[1, 2, 3, 4, 5].map(step => (
-                                            <div key={step} className={`w-10 h-2 rounded-full transition-all ${score >= step ? 'bg-green-400 shadow-sm' : 'bg-blue-900/50 border border-blue-700'}`}></div>
-                                        ))}
-                                    </div>
-                                </div>
-                                <button onClick={startNewRound} className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full border border-white/20 text-sm">
-                                    换一批
-                                </button>
-                            </div>
-
-                            <div className="flex-1 flex w-full max-w-7xl mx-auto z-10 relative mt-8 pb-8 px-4">
-                                <div className="w-1/3 flex flex-col justify-between gap-6 pr-8">
-                                    {boxes.map(box => {
-                                        const isFull = box.items.length === 3;
-                                        const isEmpty = box.items.length === 0;
-                                        return (
-                                            <div key={box.id}
-                                                 onClick={() => selectedItemId && handleItemPlacement(availableItems.find(i=>i.id===selectedItemId), box.id)}
-                                                 onDragOver={(e)=>e.preventDefault()}
-                                                 onDrop={(e)=>handleDrop(e, box.id)}
-                                                 className={`relative flex-1 rounded-2xl border-4 transition-all flex flex-col overflow-hidden ${errorBoxId === box.id ? 'animate-shake' : ''} ${isFull ? 'border-green-400 bg-green-900/40' : isEmpty ? 'border-dashed border-white/30 bg-white/5' : 'border-blue-400 bg-blue-900/30'}`}>
-                                                <div className="py-1 px-4 bg-black/20 text-xs font-bold flex justify-between">
-                                                    <span>{isEmpty ? '等待...' : box.groupName}</span>
-                                                    <span>{box.items.length}/3</span>
-                                                </div>
-                                                <div className="flex-1 p-3 flex flex-col gap-2 justify-center">
-                                                    {box.items.map((item, idx) => (
-                                                        <div key={idx} className="py-2 px-4 rounded-lg text-center font-bold bg-blue-500 text-sm">{item.name}</div>
-                                                    ))}
-                                                </div>
-                                                {isFull && <div className="absolute inset-0 flex items-center justify-center bg-green-500/20"><Icon name="check" size={48} className="text-green-400" /></div>}
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                                <div className="w-2/3 grid grid-cols-3 gap-4 content-start bg-black/20 p-6 rounded-3xl border border-white/10">
-                                    {availableItems.map(item => (
-                                        <div key={item.id} draggable onDragStart={(e)=>handleDragStart(e, item)}
-                                             onClick={()=>setSelectedItemId(item.id === selectedItemId ? null : item.id)}
-                                             className={`px-4 py-5 rounded-xl font-bold text-lg text-center cursor-pointer transition-all ${selectedItemId === item.id ? 'bg-yellow-200 text-blue-900 border-4 border-yellow-500 scale-105' : 'bg-white text-blue-900 shadow hover:-translate-y-1'}`}>
-                                            {item.name}
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </>
-                    )}
-
-                    {gameState === 'won' && (
-                        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md">
-                            <div className="bg-gradient-to-br from-blue-600 to-blue-900 p-12 rounded-3xl border-4 border-yellow-400 text-center shadow-2xl">
-                                <h2 className="text-5xl font-black text-yellow-400 mb-6">太棒了！过关！</h2>
-                                <p className="text-xl text-blue-100 mb-8">你已成功掌握了这些地理组合！</p>
-                                <button onClick={startGame} className="px-10 py-4 bg-yellow-400 text-blue-900 font-bold text-2xl rounded-full shadow-lg">再来一次</button>
-                            </div>
-                        </div>
-                    )}
+                    <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-200 hover:border-blue-400 hover:bg-blue-50 text-gray-700 font-medium flex items-center gap-4" data-value="D">
+                        <span class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">D</span>
+                        昼夜长短变化
+                    </button>
                 </div>
-            );
+
+                <!-- 反馈提示 -->
+                <div id="feedback" class="mt-6 text-center hidden font-bold rounded-lg p-3">
+                    <!-- 动态插入提示信息 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D 演示层解说词 -->
+    <div id="info-overlay">
+        <h3 class="text-2xl font-bold text-yellow-400 mb-2">回答正确！这就是昼夜交替现象</h3>
+        <p class="text-gray-200 text-lg max-w-3xl">
+            地球是一个不发光且不透明的球体，同一时间太阳只能照亮地球的一半。<br>
+            向着太阳的半球是<span class="text-yellow-300 font-bold">白昼</span>，背着太阳的半球是<span class="text-blue-300 font-bold">黑夜</span>。<br>
+            随着地球不停地自转，昼夜也就不断地交替。
+        </p>
+        <button id="reset-btn" class="mt-4 px-6 py-2 bg-white/20 hover:bg-white/30 rounded-full text-white transition-colors border border-white/50">
+            <i class="fas fa-undo mr-2"></i>再玩一次
+        </button>
+    </div>
+
+    <!-- 3D Canvas 容器 -->
+    <div id="canvas-container"></div>
+
+    <!-- 应用逻辑 -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // --- 答题逻辑 ---
+        const options = document.querySelectorAll('.option-btn');
+        const feedback = document.getElementById('feedback');
+        const uiLayer = document.getElementById('ui-layer');
+        const canvasContainer = document.getElementById('canvas-container');
+        const infoOverlay = document.getElementById('info-overlay');
+        const resetBtn = document.getElementById('reset-btn');
+        let is3DSceneActive = false;
+
+        options.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const answer = btn.getAttribute('data-value');
+
+                // 重置所有按钮样式
+                options.forEach(o => {
+                    o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake');
+                    o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500');
+                    o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600');
+                });
+
+                if (answer === 'B') {
+                    // 正确逻辑
+                    btn.classList.add('border-green-500', 'bg-green-50');
+                    btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600');
+                    btn.querySelector('span').classList.add('bg-green-500', 'text-white');
+
+                    feedback.innerHTML = '<i class="fas fa-check-circle mr-2"></i>回答正确！即将进入演示环节...';
+                    feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-green-100 text-green-700 block';
+
+                    setTimeout(() => {
+                        start3DVisualization();
+                    }, 1500);
+
+                } else {
+                    // 错误逻辑
+                    btn.classList.add('border-red-500', 'bg-red-50', 'shake');
+                    btn.querySelector('span').classList.remove('bg-gray-100', 'text-gray-600');
+                    btn.querySelector('span').classList.add('bg-red-500', 'text-white');
+
+                    const explanations = {
+                        'A': '四季更替主要由地球公转产生哦。',
+                        'C': '五带划分主要由地球公转及黄赤交角产生。',
+                        'D': '昼夜长短变化也是主要由地球公转产生的。'
+                    };
+
+                    feedback.innerHTML = `<i class="fas fa-times-circle mr-2"></i>回答错误。${explanations[answer]} 再想想！`;
+                    feedback.className = 'mt-6 text-center font-bold rounded-lg p-3 bg-red-100 text-red-700 block';
+
+                    setTimeout(() => {
+                        btn.classList.remove('shake');
+                    }, 500);
+                }
+            });
+        });
+
+        resetBtn.addEventListener('click', () => {
+            // 重置界面
+            canvasContainer.style.opacity = '0';
+            canvasContainer.style.pointerEvents = 'none';
+            infoOverlay.style.opacity = '0';
+            infoOverlay.style.pointerEvents = 'none';
+            uiLayer.style.opacity = '1';
+            uiLayer.style.pointerEvents = 'auto';
+
+            // 重置题目状态
+            feedback.classList.add('hidden');
+            options.forEach(o => {
+                o.classList.remove('border-red-500', 'bg-red-50', 'border-green-500', 'bg-green-50', 'shake');
+                o.querySelector('span').classList.remove('bg-red-500', 'text-white', 'bg-green-500');
+                o.querySelector('span').classList.add('bg-gray-100', 'text-gray-600');
+            });
+
+            is3DSceneActive = false;
+        });
+
+
+        // --- Three.js 3D 演示逻辑 ---
+        let scene, camera, renderer, earthGroup, earthMesh, controls;
+
+        function init3D() {
+            if (scene) return;
+
+            // 1. 创建场景
+            scene = new THREE.Scene();
+
+            // 2. 创建相机
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, 20);
+
+            // 3. 创建渲染器
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            canvasContainer.appendChild(renderer.domElement);
+
+            // 4. 控制器
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.enablePan = false;
+
+            // 5. 地球模型
+            earthGroup = new THREE.Group();
+            scene.add(earthGroup);
+
+            const textureLoader = new THREE.TextureLoader();
+            const earthGeometry = new THREE.SphereGeometry(5, 64, 64);
+            const earthMaterial = new THREE.MeshPhongMaterial({
+                map: textureLoader.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg'),
+                bumpMap: textureLoader.load('https://unpkg.com/three-globe/example/img/earth-topology.png'),
+                bumpScale: 0.1,
+                specular: new THREE.Color('grey'),
+                shininess: 10
+            });
+            earthMesh = new THREE.Mesh(earthGeometry, earthMaterial);
+            earthGroup.rotation.z = 23.5 * Math.PI / 180; // 模拟地轴倾斜
+            earthGroup.add(earthMesh);
+
+            // 大气层
+            const atmosphereGeometry = new THREE.SphereGeometry(5.1, 64, 64);
+            const atmosphereMaterial = new THREE.MeshPhongMaterial({
+                color: 0x00aaff,
+                transparent: true,
+                opacity: 0.15,
+                side: THREE.BackSide,
+                blending: THREE.AdditiveBlending
+            });
+            const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+            earthGroup.add(atmosphere);
+
+            // 6. 灯光 - 昼夜交替的关键
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.5); // 弱光，模拟微弱背景光
+            scene.add(ambientLight);
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 3);
+            sunLight.position.set(20, 0, 5);
+            scene.add(sunLight);
+
+            // 装饰：太阳发光体
+            const sunGeom = new THREE.SphereGeometry(1, 32, 32);
+            const sunMat = new THREE.MeshBasicMaterial({ color: 0xffdd44 });
+            const sunSphere = new THREE.Mesh(sunGeom, sunMat);
+            sunSphere.position.copy(sunLight.position);
+            scene.add(sunSphere);
+
+            // 星空
+            createStars();
+
+            window.addEventListener('resize', onWindowResize, false);
+            animate();
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        function createStars() {
+            const starGeometry = new THREE.BufferGeometry();
+            const starCount = 1500;
+            const posArray = new Float32Array(starCount * 3);
+            for (let i = 0; i < starCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 100;
+            }
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const starMaterial = new THREE.PointsMaterial({ size: 0.05, color: 0xffffff });
+            const stars = new THREE.Points(starGeometry, starMaterial);
+            scene.add(stars);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            if (!is3DSceneActive) return;
+            if (earthMesh) earthMesh.rotation.y += 0.005; // 模拟自转
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        function start3DVisualization() {
+            is3DSceneActive = true;
+            init3D();
+            uiLayer.style.opacity = '0';
+            uiLayer.style.pointerEvents = 'none';
+            canvasContainer.style.opacity = '1';
+            canvasContainer.style.pointerEvents = 'auto';
+            infoOverlay.style.opacity = '1';
+            infoOverlay.style.pointerEvents = 'auto';
+        }
     </script>
 </body>
 </html>
